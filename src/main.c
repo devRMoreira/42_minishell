@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/04/28 13:31:40 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/04/28 13:38:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int main(int argc, char **argv)
 	while(1)
 	{
 		//* get input
-		data.input = readline("cenas > ");
+		data.input = readline("cenas > "); //! free after being used
 
 		//* prompt again if empty
 		while(empty(data.input))
 			data.input = readline("cenas > ");
 
-		// printf("%s\n", data.input);
+		printf("input-> %s\n", data.input);
 
 		//*add to RL history
 		add_history(data.input);
@@ -69,18 +69,18 @@ int main(int argc, char **argv)
 			}
 		}
 
-		// free(data.input);
+		free(data.input);
+		rl_clear_history();
 
+		//* dir
+		data.pwd = getcwd(NULL, 0);
+		printf("%s\n", data.pwd);
 
-		// //* dir
-		// data.pwd = getcwd(NULL, 0);
-		// printf("%s\n", data.pwd);
-
-		// //* change dir
-		// chdir("../..");
-		// printf("chdir->../..\n");
-		// data.pwd = getcwd(NULL, 0);
-		// printf("%s\n", data.pwd);
+		//* change dir
+		chdir("../..");
+		printf("chdir->../..\n");
+		data.pwd = getcwd(NULL, 0);
+		printf("%s\n", data.pwd);
 
 	}
 

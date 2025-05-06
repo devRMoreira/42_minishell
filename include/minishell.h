@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/06 18:30:34 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:37:54 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int ft_print_error(t_data *data, char* error, int exit_code);
 t_token *ft_new_token(char *str, int length, t_token_type type);
 char *ft_get_env(t_data *data, const char *val);
 void ft_add_token(t_data *data, t_token *token);
-void ft_free_data(t_data *data)
+void ft_free_data(t_data *data);
 
 
 

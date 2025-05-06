@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/04/28 14:57:50 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:07:58 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-int main(int argc, char **argv)
+int main(void)
 {
-
-	(void)argc;
-	(void)argv;
 	t_data data;
 
 	while(1)
@@ -26,17 +23,15 @@ int main(int argc, char **argv)
 		//* get input
 		data.input = readline("cenas > "); //! free after being used
 
-		//* prompt again if empty
-		while(ft_is_empty(data.input))
-		{
-			printf("a\n");
-			data.input = readline("cenas > ");
-		}
+		ft_parsing(data.input, data);
 
-		printf("input-> %s\n", data.input);
+		//*add to RL history
+		if(!ft_is_empty(data.input))
+			add_history(data.input);
 
-		// //*add to RL history
-		// add_history(data.input);
+		//* after being used
+		// free(data.input);
+
 
 		// //*print history on input == pwd
 		// if(!ft_strncmp(data.input, "pwd", 3))
@@ -50,8 +45,6 @@ int main(int argc, char **argv)
 		// 		}
 		// 	}
 		// }
-
-		// free(data.input);
 		// rl_clear_history();
 
 		//* dir

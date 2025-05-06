@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/04/28 13:46:08 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/05/06 16:09:42 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ LDFLAGS = -lreadline
 NAME = minishell
 
 SRC = src/main.c \
-	src/parsing/input.c \
+	src/parsing/parsing.c \
+	src/lexing/lexing.c \
 
 
 
@@ -30,7 +31,6 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(LIBFT) $(NAME)
 
-
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
@@ -41,8 +41,17 @@ $(OBJ_DIR)/%.o: %.c
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LIBFT)
 
-sani: CFLAGS += -g -fsanitize=leaks
-sani: re
+nof: $(LIBFT) $(NAME)
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $< -o $@
+
+$(NAME): $(OBJ)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LIBFT)
 
 clean:
 	rm -rf $(OBJ_DIR)

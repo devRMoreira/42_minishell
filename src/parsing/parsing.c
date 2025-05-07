@@ -6,40 +6,36 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/06 18:28:59 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:50:46 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int is_special(char c)
+static int is_operator(char c)
 {
-	return (c != '"' && c != '\'' &&
-		c != '|' && c != '<' && c != '>');
+	return (c == '|' || c == '<' || c == '>');
 }
 
 static int is_space(char c)
 {
-	if(c == 32)
-		return 1;
-	else if (c >= 9 && c <=13)
-		return 1;
-
-	return 0;
+	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-int ft_is_empty(char *str)
+static t_token_type get_operator_type(char c, char next)
 {
-	int i ;
-
-	if(!str)
-		return (0);
-
-	i = -1;
-	while(is_space(str[++i]))
-	if(str[i] == '\0')
-		return 1;
-	return 0;
+	if (c == '|' && next != '|')
+	return PIPE;
+	if (c == '<' && next == '<')
+		return HEREDOC;
+	if (c == '<')
+		return REDIRIN;
+	if (c == '>' && next == '>')
+		return APPEND;
+	if (c == '>')
+		return REDIROUT;
+	return WORD;
+	//! fallback just in case
 }
 
 int ft_parsing(char *input, t_data *data)
@@ -67,8 +63,7 @@ int ft_parsing(char *input, t_data *data)
 				i++;
 
 			if(!input[i])
-				return ft_print_error(data,
-					"syntax error: unclosed quote\n", 258);
+				return ft_print_error(data, "syntax error: unclosed quote\n", 258);
 
 			token = ft_new_token(input + start, i - start, WORD);
 			if(!token)
@@ -77,21 +72,34 @@ int ft_parsing(char *input, t_data *data)
 			i++;
 
 		}
+		else if (is_operator(input[i]))
+		{
+
+			t_token_type type = get_operator_type(input[i], input[i+1]);
+			int len;
+			if(type == HEREDOC || type == APPEND)
+				len = 2;
+			else
+				len = 1;
+
+			token = ft_new_token(input + i, len, type);
+			if(!token)
+				return 1;
+			ft_add_token(data, token);
+			i+= len;
+		}
 		else
 		{
 			start = i;
-			while(input[i] && !is_space(input[i]) && !is_special(input[i]))
+			while (input[i] && !is_space(input[i]) && !is_operator(input[i]) && input[i] != '"' && input[i] != '\'')
 				i++;
-			if(i > start)
-			{
-				token = ft_new_token(input + start, i - start, WORD);
-				if(!token)
-					return 1;
-				ft_add_token(data, token);
-			}
+			token = ft_new_token(input + start, i - start, WORD);
+			if(!token)
+				return 1;
+			ft_add_token(data, token);
 		}
 
-		
+
 	}
 	return 0;
 }

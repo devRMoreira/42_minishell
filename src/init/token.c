@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:35:40 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/06 18:21:10 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:56:05 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ t_token *ft_new_token(char *str, int length, t_token_type type)
 	if(token)
 	{
 		token->input = ft_strdup(str);
+		if(!token->input)
+		{
+			free(token);
+			return NULL;
+		}
 		token->type = type;
 		token->next = NULL;
 	}

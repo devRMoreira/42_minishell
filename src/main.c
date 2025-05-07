@@ -6,13 +6,23 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/06 18:39:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:16:25 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+
+void debugPrintTokens(t_data *data)
+{
+	t_token *temp = data->tokens;
+	while (temp)
+	{
+    	printf("Token: \"%s\", Type: %d\n", temp->input, temp->type);
+    	temp = temp->next;
+	}
+}
 
 int main(int argc, char **argv, char **envp)
 {
@@ -30,7 +40,7 @@ int main(int argc, char **argv, char **envp)
 			//*add to RL history if ok
 			if(!ft_parsing(data->input, data))
 				add_history(data->input);
-
+			debugPrintTokens(data);
 
 			//* free after it's used
 			free(data->input);
@@ -40,9 +50,9 @@ int main(int argc, char **argv, char **envp)
 			//TODO !input
 		}
 
-		ft_free_data(data);
 	}
 
+	ft_free_data(data);
 	return 0;
 }
 

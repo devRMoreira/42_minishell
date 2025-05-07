@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/07 15:54:29 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:33:56 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int main(int argc, char **argv, char **envp)
 
 		if(data->input)
 		{
+
+			//TODO offset loop cleanup to another func later
 			//always free tokens
 			free_tokens(data->tokens);
 			data->tokens = NULL;

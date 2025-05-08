@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:33:56 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:42:18 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv, char **envp)
 			data->tokens = NULL;
 
 			//*add to RL history if ok
-			if(!ft_parsing(data->input, data))
+			if(ft_parsing(data->input, data))
 				add_history(data->input);
 
 			debugPrintTokens(data);

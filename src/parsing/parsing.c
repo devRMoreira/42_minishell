@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/07 15:37:55 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:38:56 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@ static int is_operator(char c)
 static int is_space(char c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
+}
+static int is_empty(char *s)
+{
+	int i = -1;
+
+	while(is_space(s[++i]));
+	if(!s[i])
+		return 1;
+	return 0;
 }
 
 static t_token_type get_operator_type(char c, char next)
@@ -45,6 +54,8 @@ int ft_parsing(char *input, t_data *data)
 	char quote;
 	t_token *token;
 
+	if(is_empty(input))
+		return 0;
 
 	while(input[i])
 	{
@@ -71,7 +82,7 @@ int ft_parsing(char *input, t_data *data)
 			//else it creates a new token with the inbetween quotes
 			token = ft_new_token(input + start, i - start, WORD);
 			if(!token)
-				return 1;
+				return 0;
 			ft_add_token(data, token);
 			i++;
 
@@ -90,7 +101,7 @@ int ft_parsing(char *input, t_data *data)
 
 			token = ft_new_token(input + i, len, type);
 			if(!token)
-				return 1;
+				return 0;
 			ft_add_token(data, token);
 			i += len;
 		}
@@ -104,11 +115,11 @@ int ft_parsing(char *input, t_data *data)
 			//and turn it into a new token
 			token = ft_new_token(input + start, i - start, WORD);
 			if(!token)
-				return 1;
+				return 0;
 			ft_add_token(data, token);
 		}
 
 
 	}
-	return 0;
+	return 1;
 }

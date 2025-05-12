@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/08 11:42:18 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:57:35 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,29 +45,41 @@ void debugPrintTokens(t_data *data)
     }
 }
 
-int main(int argc, char **argv, char **envp)
+
+//!! CHECK OUTPUT ON LINUX OF CMDS WITH QUOTES MIGHT BE BUGGED WSL
+
+int main(int ac, char **av, char **envp)
 {
-	(void)argc;
-	(void)argv;
+	(void)ac;
+	(void)av;
 	t_data *data = ft_init_data(envp);
 	int status;
 
 	while(1)
 	{
 		//* get input
-		data->input = readline("cenas > ");
+		data->input = readline("minishell > ");
 
 		if(data->input)
 		{
 
 			//TODO offset loop cleanup to another func later
 			//always free tokens
-			free_tokens(data->tokens);
+			ft_free_tokens(data->tokens);
 			data->tokens = NULL;
 
 			//*add to RL history if ok
 			if(ft_parsing(data->input, data))
+			{
 				add_history(data->input);
+
+				char **argv = ft_build_argv(data->tokens);
+				if(argv)
+				{
+					ft_execute_command(argv, data);
+					ft_free_argv(argv);
+				}
+			}
 
 			debugPrintTokens(data);
 

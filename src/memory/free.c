@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:00:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/07 15:56:37 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:31:41 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void free_envp(char **envp)
 	free(envp);
 }
 
-void free_tokens(t_token *tokens)
+void ft_free_tokens(t_token *tokens)
 {
 	t_token *temp;
 
@@ -60,7 +60,15 @@ void ft_free_data(t_data *data)
 		return ;
 	free(data->input);
 	free_envp(data->envp);
-	free_tokens(data->tokens);
+	ft_free_tokens(data->tokens);
 	free_cmds(data->cmds);
 	free(data);
+}
+
+void ft_free_split(char **strs)
+{
+	int i = -1;
+	while(strs && strs[++i])
+		free(strs[i]);
+	free(strs);
 }

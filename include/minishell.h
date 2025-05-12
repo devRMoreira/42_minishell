@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:33:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:57:28 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 # include "../libft/libft.h"
 # include <stdio.h>
+# include <errno.h>
 # include <signal.h>
 # include <unistd.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -57,16 +59,18 @@ typedef struct s_data
 
 }	t_data;
 
-
+void ft_execute_command(char **argv, t_data *data);
+char **ft_build_argv(t_token *tokens);
 t_data *ft_init_data(char **envp);
-void free_tokens(t_token *tokens);
+void ft_free_tokens(t_token *tokens);
 int ft_parsing(char *input, t_data *data);
 int ft_print_error(t_data *data, char* error, int exit_code);
 t_token *ft_new_token(char *str, int length, t_token_type type);
-char *ft_get_env(t_data *data, const char *val);
+char *ft_get_env_var(t_data *data, const char *val);
 void ft_add_token(t_data *data, t_token *token);
 void ft_free_data(t_data *data);
-
+void ft_free_split(char **paths);
+void ft_free_argv(char **argv);
 
 
 

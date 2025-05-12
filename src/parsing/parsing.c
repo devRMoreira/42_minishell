@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/08 14:38:56 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:52:04 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,30 +65,8 @@ int ft_parsing(char *input, t_data *data)
 
 		if(!input[i])
 			break;
-		//if quotes
-		if(input[i] == '"' || input[i] == '\'')
-		{
-			quote = input[i];
-			i++;
-			start = i;
-
-			//find matching quote
-			while(input[i] && input[i] != quote)
-				i++;
-			//if not found error
-			if(!input[i])
-				return ft_print_error(data, "syntax error: unclosed quote\n", 258);
-
-			//else it creates a new token with the inbetween quotes
-			token = ft_new_token(input + start, i - start, WORD);
-			if(!token)
-				return 0;
-			ft_add_token(data, token);
-			i++;
-
-		}
 		//if its an operator <>|
-		else if (is_operator(input[i]))
+		if (is_operator(input[i]))
 		{
 
 			//we find the op type and make it into a new token
@@ -105,14 +83,29 @@ int ft_parsing(char *input, t_data *data)
 			ft_add_token(data, token);
 			i += len;
 		}
-		//otherwise its just a word
+		//otherwise its just a regular char
 		else
 		{
 			start = i;
 			//and while its not a space or anything important we skip it
-			while (input[i] && !is_space(input[i]) && !is_operator(input[i]) && input[i] != '"' && input[i] != '\'')
+			while (input[i] && !is_space(input[i]) && !is_operator(input[i]))
+			{
+				// if we find a quote
+				if(input[i] == '"' || input[i] == '\'')
+				{
+					// hold it and skip to next
+					char quote = input[i++];
+					//while its not over and it's not the quote char i++
+					while(input[i] && input[i] != quote)
+						i++;
+					//if end of word, it didn't find a matching
+					if(!input[i])
+						return ft_print_error(data, "syntax error: unclosed quote\n", 258);
+
+				}
 				i++;
-			//and turn it into a new token
+			}
+			//turn it into a new token
 			token = ft_new_token(input + start, i - start, WORD);
 			if(!token)
 				return 0;
@@ -123,3 +116,29 @@ int ft_parsing(char *input, t_data *data)
 	}
 	return 1;
 }
+
+
+//! old quote if on parsing
+
+//* if quotes
+// if(input[i] == '"' || input[i] == '\'')
+// {
+// 	quote = input[i];
+// 	i++;
+// 	start = i;
+
+//* find matching quote
+// 	while(input[i] && input[i] != quote)
+// 		i++;
+//* if not found error
+// 	if(!input[i])
+// 		return ft_print_error(data, "syntax error: unclosed quote\n", 258);
+
+//* 	else it creates a new token with the inbetween quotes
+// 	token = ft_new_token(input + start, i - start, WORD);
+// 	if(!token)
+// 		return 0;
+// 	ft_add_token(data, token);
+// 	i++;
+
+// }

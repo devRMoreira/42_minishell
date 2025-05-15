@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/15 17:45:19 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/15 17:55:22 by rimagalh         ###   ########.fr       */
+/*   Created: 2025/05/15 17:53:20 by rimagalh          #+#    #+#             */
+/*   Updated: 2025/05/15 17:57:27 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../include/minishell.h"
 
-
-// passing argv cuz idk if flags are needed so ignoring
-int ft_pwd(char **argv, t_data *data)
+//only print the env vars that have an = like bash
+int ft_env(char **argv, t_data *data)
 {
 	(void)argv;
-	char *cwd;
+	int i = 0;
 
-	cwd = getcwd(NULL, 0);
-	if(!cwd)
+	while (data->envp[i])
 	{
-		ft_print_error(data, "pwd: error retrieving current directory", 1);
-		return 1;
+		if(ft_strchr(data->envp[i], '='))
+			ft_putendl_fd(data->envp[i], STDOUT_FILENO);
+		i++;
 	}
-
-	ft_putendl_fd(cwd, STDOUT_FILENO);
-	free(cwd);
 	return 0;
 }

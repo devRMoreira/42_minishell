@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:56 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 17:56:14 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:43:09 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int ft_print_error(t_data *data, char* error, int exit_code)
 {
-	ft_printf("minishell: %s\n");
+	ft_printf("minishell: %s\n", error);
 	data->exit_status = exit_code;
 	return (exit_code);
 }

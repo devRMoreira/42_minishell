@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 16:52:04 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:42:54 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int ft_parsing(char *input, t_data *data)
 				if(input[i] == '"' || input[i] == '\'')
 				{
 					// hold it and skip to next
-					char quote = input[i++];
+					quote = input[i++];
 					//while its not over and it's not the quote char i++
 					while(input[i] && input[i] != quote)
 						i++;

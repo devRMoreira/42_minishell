@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 18:01:53 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:34:56 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,40 +65,45 @@ void ft_execute_command(char **argv, t_data *data)
 	char *err;
 
 	//TODO builtins next
-	//if(is_builtin(argv[0]))
-
-	//else
-	path = get_cmd_path(argv[0], data);
-	if(!path)
+	if(ft_is_builtin(argv[0]))
 	{
-		err = ft_strjoin(argv[0], ": command not found");
-		ft_print_error(data, err, 127);
-		free(err);
-		return ;
+		data->exit_status = ft_exec_builtin(argv, data);
 	}
-
-	pid = fork();
-	if (pid == -1)
+	else
 	{
+		path = get_cmd_path(argv[0], data);
+		if(!path)
+		{
+			err = ft_strjoin(argv[0], ": command not found");
+			ft_print_error(data, err, 127);
+			free(err);
+			return ;
+		}
+
+		pid = fork();
+		if (pid == -1)
+		{
+			free(path);
+			ft_print_error(data, "fork failed", 1);
+			return ;
+		}
+
+		if (pid == 0)
+		{
+			execve(path, argv, data->envp);
+			ft_print_error(data, strerror(errno), 126);
+			exit(data->exit_status);
+		}
+
 		free(path);
-		ft_print_error(data, "fork failed", 1);
-		return ;
+		waitpid(pid, &status, 0);
+		//we check if it exited normally like from finishing its task or the exit above
+		if(WIFEXITED(status))
+			data->exit_status = WEXITSTATUS(status);
+		//if it was killed by a signal
+		else if (WIFSIGNALED(status))
+			//the bash status codes for these signals are +128 of their value
+			data->exit_status = 128 + WTERMSIG(status);
 	}
 
-	if (pid == 0)
-	{
-		execve(path, argv, data->envp);
-		ft_print_error(data, strerror(errno), 126);
-		exit(data->exit_status);
-	}
-
-	free(path);
-	waitpid(pid, &status, 0);
-	//we check if it exited normally like from finishing its task or the exit above
-	if(WIFEXITED(status))
-		data->exit_status = WEXITSTATUS(status);
-	//if it was killed by a signal
-	else if (WIFSIGNALED(status))
-		//the bash status codes for these signals are +128 of their value
-		data->exit_status = 128 + WTERMSIG(status);
 }

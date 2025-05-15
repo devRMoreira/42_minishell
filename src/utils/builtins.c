@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:13:03 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/15 16:49:44 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:48:14 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int ft_is_builtin(char *cmd)
 
     if(ft_strcmp(cmd, "echo") == 0)
 		return 1;
+    if(ft_strcmp(cmd, "pwd") == 0)
+		return 1;
 
 	return 0;
 }
@@ -30,6 +32,8 @@ int ft_exec_builtin(char **argv, t_data *data)
 
     if (ft_strcmp(argv[0], "echo") == 0)
         return ft_echo(argv);
+    if (ft_strcmp(argv[0], "pwd") == 0)
+        return ft_pwd(argv, data);
 
     return 1;
 }

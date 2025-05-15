@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/15 16:52:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:48:20 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void ft_execute_command(char **argv, t_data *data);
 int ft_is_builtin(char *cmd);
 int ft_exec_builtin(char **argv, t_data *data);
 int ft_echo(char **argv);
+int ft_pwd(char **argv, t_data *data);
 char **ft_build_argv(t_token *tokens);
 t_data *ft_init_data(char **envp);
 void ft_free_tokens(t_token *tokens);

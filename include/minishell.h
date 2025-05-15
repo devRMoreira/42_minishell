@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/15 17:54:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:10:03 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <errno.h>
+# include <limits.h>
+# include <stdlib.h>
 # include <signal.h>
 # include <unistd.h>
 # include <sys/wait.h>
@@ -63,6 +65,7 @@ void ft_execute_command(char **argv, t_data *data);
 int ft_is_builtin(char *cmd);
 int ft_exec_builtin(char **argv, t_data *data);
 int ft_echo(char **argv);
+int ft_exit(char **argv, t_data *data);
 int ft_env(char **argv, t_data *data);
 int ft_pwd(char **argv, t_data *data);
 char **ft_build_argv(t_token *tokens);

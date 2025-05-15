@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/05/15 17:53:13 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/05/15 18:35:20 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ NAME = minishell
 SRC = src/main.c \
 	src/commands/builtins/echo.c \
 	src/commands/builtins/env.c \
+	src/commands/builtins/exit.c \
 	src/commands/builtins/pwd.c \
 	src/commands/cmd.c \
 	src/memory/cmd.c \
@@ -51,18 +52,6 @@ $(OBJ_DIR)/%.o: %.c
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LIBFT)
 
-nof: $(LIBFT) $(NAME)
-
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
-
-$(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	$(CC) -c $< -o $@
-
-$(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LIBFT)
-
 clean:
 	rm -rf $(OBJ_DIR)
 	$(MAKE) -C $(LIBFT_DIR) clean
@@ -73,4 +62,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re nof

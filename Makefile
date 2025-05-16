@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/05/15 18:35:20 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/05/16 10:47:50 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ LDFLAGS = -lreadline
 NAME = minishell
 
 SRC = src/main.c \
+	src/commands/builtins/cd.c \
 	src/commands/builtins/echo.c \
 	src/commands/builtins/env.c \
 	src/commands/builtins/exit.c \

@@ -6,13 +6,94 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:52:25 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 17:57:32 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:54:24 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char *ft_get_env_var(t_data *data, const char *val)
+//behold an amalgamation of strings
+static char* strjoin_3(char *str1, char *str2, char *str3)
+{
+	size_t len1 = ft_strlen(str1);
+	size_t len2 = ft_strlen(str2);
+	size_t len3 = ft_strlen(str3);
+	size_t total = len1 + len2 + len3 + 1;
+	char *res = malloc(sizeof(char) * total);
+
+	if(!res)
+		return NULL;
+	ft_strlcpy(res, str1, total);
+	ft_strlcat(res, str2, total);
+	ft_strlcat(res, str3, total);
+
+	return res;
+}
+
+
+static int update_key(char **envp, char *key, char *val)
+{
+	int i = 0;
+	size_t key_len = ft_strlen(key);
+	char *new_key = strjoin_3(key, "=", val);
+	if(!new_key)
+		return 1;
+
+	while(envp[i])
+	{
+		if(ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
+		{
+			free(envp[i]);
+			envp[i] = new_key;
+			return 0;
+		}
+		i++;
+	}
+	free(new_key);
+	return 1;
+}
+
+
+static int add_new_key(t_data *data, char *key, char* val)
+{
+	int i = -1;
+	int j = -1;
+	char **new = NULL;
+	char *new_key = strjoin_3(key, "=", val);
+
+	if(!new_key)
+		return 1;
+
+	while(data->envp[++i]);
+
+	new = malloc(sizeof(char*) * (i + 2));
+	if(!new)
+	{
+		free(new_key);
+		return 1;
+	}
+
+	while(++j < i)
+		new[j] = data->envp[j];
+
+	new[i] = new_key;
+	new[i + 1] = NULL;
+	free(data->envp);
+	data->envp = new;
+	return 0;
+}
+
+int ft_set_env(t_data *data, char *key, char *val)
+{
+	if(!key || !val)
+		return 1;
+	if(update_key(data->envp, key, val) == 0)
+		return 0;
+
+	return add_new_key(data, key, val);
+}
+
+char *ft_get_env(t_data *data, char *val)
 {
 	int i = 0;
 	int val_size = ft_strlen(val);

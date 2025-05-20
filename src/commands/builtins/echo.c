@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:37:20 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 16:39:19 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:20:19 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_echo(char **argv)
 	int	j;
 
 	i = 0;
-	nl = 0;
+	nl = 1;
 	while (argv[++i] && argv[i][0] == '-' && argv[i][1] == 'n')
 	{
 		j = 2;

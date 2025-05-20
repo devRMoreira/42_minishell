@@ -6,46 +6,46 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:07:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 17:44:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:19:30 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void ft_free_argv(char **argv)
+static int	total_tokens(t_token *tokens)
 {
-	int i = -1;
-	while(argv[++i])
-		free(argv[i]);
-	free(argv);
+	int	res;
+
+	res = 0;
+	while (tokens)
+	{
+		res++;
+		tokens = tokens->next;
+	}
+	return (res);
 }
 
-char **ft_build_argv(t_token *tokens)
+char	**ft_build_argv(t_token *tokens)
 {
-		int argc = 0;
-		t_token *temp = tokens;
+	int		i;
+	int		argc;
+	char	**argv;
+	t_token	*temp;
 
-		while(temp)
-		{
-			argc++;
-			temp = temp->next;
-		}
-
-		char **argv = malloc(sizeof(char *) * (argc + 1));
-		if(!argv)
-			return NULL;
-
-		temp = tokens;
-		int i = 0;
-		while(temp)
-		{
-			argv[i] = ft_strdup(temp->input);
-			if(!argv[i])
-				return ft_free_argv(argv), NULL;
-
-			temp = temp->next;
-			i++;
-		}
+	argc = total_tokens(tokens);
+	argv = malloc(sizeof(char *) * (argc + 1));
+	if (!argv)
+		return (NULL);
+	temp = tokens;
+	i = 0;
+	while (temp)
+	{
+		argv[i] = ft_strdup(temp->input);
+		if (!argv[i])
+			return (ft_free_split(argv), NULL);
+		temp = temp->next;
+		i++;
+	}
 	argv[i] = NULL;
-	return argv;
+	return (argv);
 }

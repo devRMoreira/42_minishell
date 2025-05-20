@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 16:54:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:11:45 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int main(int ac, char **av, char **envp)
 				if(argv)
 				{
 					ft_execute_command(argv, data);
-					ft_free_argv(argv);
+					ft_free_split(argv);
 				}
 			}
 

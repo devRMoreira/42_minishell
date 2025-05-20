@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 17:38:06 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:08:23 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	ft_execute_command(char **argv, t_data *data)
 		{
 			free(path);
 			ft_print_error(data, "fork failed", 1);
-			return;
+			return ;
 		}
 		if (pid == 0)
 			run_cmd(path, argv, data);

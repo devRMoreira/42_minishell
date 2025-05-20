@@ -6,104 +6,109 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:17:35 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:38:06 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char *get_cmd_path(char *cmd, t_data *data)
+//we first need to check if its to be considered a path or just a cmd
+//ls or the entire /usr/bin/ls
+//all envp paths come seperated by :
+//we build the cmd path
+//we basically just join the path + / + the cmd  |to create the complete path
+static char	*try_paths(char **all_paths, char *cmd)
 {
-	//we first need to check if it has the full path or its just the cmd itself
-	//like just ls or the entire /usr/bin/ls
-	if(ft_strchr(cmd, '/'))
+	int		i;
+	char	*temp;
+	char	*cmd_path;
+
+	i = 0;
+	while (all_paths[i])
 	{
-		if(access(cmd, X_OK) == 0)
-			return ft_strdup(cmd);
-		return NULL;
-	}
-
-	char *path = ft_get_env(data, "PATH");
-	if(!path)
-		return NULL;
-
-	//all envp paths come seperated by :
-	char **all_paths = ft_split(path, ':');
-	if(!all_paths)
-		return NULL;
-
-	//we build the cmd
-	char *cmd_path = NULL;
-	int i = -1;
-
-	while(all_paths[++i])
-	{
-		//holding it in a temp var to not make messy lines with 2 strjoins
-		//we basically just join the path + a / to create the path then the cmd
-		char *temp = ft_strjoin(all_paths[i], "/");
+		temp = ft_strjoin(all_paths[i], "/");
 		cmd_path = ft_strjoin(temp, cmd);
 		free(temp);
-
-		//if good return it for execution
-		if(access(cmd_path, X_OK) == 0)
-		{
-			ft_free_split(all_paths);
-			return cmd_path;
-		}
+		if (access(cmd_path, X_OK) == 0)
+			return (cmd_path);
 		free(cmd_path);
+		i++;
 	}
-
-	ft_free_split(all_paths);
-	return NULL;
+	return (NULL);
 }
 
-void ft_execute_command(char **argv, t_data *data)
+static char	*get_cmd_path(char *cmd, t_data *data)
 {
-	pid_t pid;
-	int status;
-	char *path;
-	char *err;
+	char	*path;
+	char	*cmd_path;
+	char	**all_paths;
 
-	//TODO builtins next
-	if(ft_is_builtin(argv[0]))
+	if (ft_strchr(cmd, '/'))
 	{
-		data->exit_status = ft_exec_builtin(argv, data);
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
 	}
-	else
-	{
-		path = get_cmd_path(argv[0], data);
-		if(!path)
-		{
-			err = ft_strjoin(argv[0], ": command not found");
-			ft_print_error(data, err, 127);
-			free(err);
-			return ;
-		}
+	path = ft_get_env(data, "PATH");
+	if (!path)
+		return (NULL);
+	all_paths = ft_split(path, ':');
+	if (!all_paths)
+		return (NULL);
+	cmd_path = try_paths(all_paths, cmd);
+	ft_free_split(all_paths);
+	return (cmd_path);
+}
 
+//we check if it exited normally like from finishing its task or the exit above
+//if it was killed by a signal
+//the bash status codes for these signals are +128 of their value
+static void	run_cmd(char *path, char **argv, t_data *data)
+{
+	execve(path, argv, data->envp);
+	ft_print_error(data, strerror(errno), 126);
+	exit(data->exit_code);
+}
+
+static int	check_path(char **argv, t_data *data, char **path)
+{
+	char	*error;
+
+	*path = get_cmd_path(argv[0], data);
+	if (!*path)
+	{
+		error = ft_strjoin(argv[0], ": command not found");
+		ft_print_error(data, error, 127);
+		free(error);
+		return (0);
+	}
+	return (1);
+}
+
+void	ft_execute_command(char **argv, t_data *data)
+{
+	pid_t	pid;
+	int		status;
+	char	*path;
+
+	if (ft_is_builtin(argv[0]))
+		data->exit_code = ft_exec_builtin(argv, data);
+	else if (check_path(argv, data, &path))
+	{
 		pid = fork();
 		if (pid == -1)
 		{
 			free(path);
 			ft_print_error(data, "fork failed", 1);
-			return ;
+			return;
 		}
-
 		if (pid == 0)
-		{
-			execve(path, argv, data->envp);
-			ft_print_error(data, strerror(errno), 126);
-			exit(data->exit_status);
-		}
-
+			run_cmd(path, argv, data);
 		free(path);
 		waitpid(pid, &status, 0);
-		//we check if it exited normally like from finishing its task or the exit above
-		if(WIFEXITED(status))
-			data->exit_status = WEXITSTATUS(status);
-		//if it was killed by a signal
+		if (WIFEXITED(status))
+			data->exit_code = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			//the bash status codes for these signals are +128 of their value
-			data->exit_status = 128 + WTERMSIG(status);
+			data->exit_code = 128 + WTERMSIG(status);
 	}
-
 }

@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:46:07 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 16:33:09 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:18:48 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 static int	print_cd_error(t_data *data, char *error)
 {
 	ft_printf("minishell: cd: %s: %s\n", error, strerror(errno));
-	data->exit_status = 1;
+	data->exit_code = 1;
 	return (1);
 }
 
@@ -29,7 +29,7 @@ static int	update_oldpwd(t_data *data)
 	char	*old_pwd;
 	char	*cwd;
 
-	*old_pwd = ft_get_env(data, "PWD");
+	old_pwd = ft_get_env(data, "PWD");
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (ft_print_error(data,

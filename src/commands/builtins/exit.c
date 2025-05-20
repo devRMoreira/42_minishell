@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:58:47 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 16:43:04 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:54:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_exit(char **argv, t_data *data)
 	if (!argv[1])
 	{
 		ft_free_data(data);
-		exit(data->exit_status);
+		exit(data->exit_code);
 	}
 	if (!is_number(argv[1]))
 	{
@@ -53,7 +53,7 @@ int	ft_exit(char **argv, t_data *data)
 	if (argv[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		data->exit_status = 1;
+		data->exit_code = 1;
 		return (1);
 	}
 	exit_code = ft_atoi(argv[1]);

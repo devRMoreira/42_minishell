@@ -6,139 +6,153 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/16 12:20:44 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:02:35 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int is_operator(char c)
+static int	ft_parse_operator(char *input, int *i, t_data *data)
 {
-	return (c == '|' || c == '<' || c == '>');
+	int				len;
+	t_token			*token;
+	t_token_type	type;
+
+	type = ft_get_operator_type(input[*i], input[*i + 1]);
+	if (type == HEREDOC || type == APPEND)
+		len = 2;
+	else
+		len = 1;
+	token = ft_new_token(input + *i, len, type);
+	if (!token)
+		return (0);
+	ft_add_token(data, token);
+	*i += len;
+	return (1);
 }
 
-static int is_space(char c)
+static int	ft_parse_word(char *input, int *i, t_data *data)
 {
-	return (c == ' ' || (c >= 9 && c <= 13));
-}
-static int is_empty(char *s)
-{
-	int i = -1;
+	int		start;
+	char	quote;
+	t_token	*token;
 
-	while(is_space(s[++i]));
-	if(!s[i])
-		return 1;
-	return 0;
-}
-
-static t_token_type get_operator_type(char c, char next)
-{
-	if (c == '|' && next != '|')
-	return PIPE;
-	if (c == '<' && next == '<')
-		return HEREDOC;
-	if (c == '<')
-		return REDIRIN;
-	if (c == '>' && next == '>')
-		return APPEND;
-	if (c == '>')
-		return REDIROUT;
-	return WORD;
-	//! fallback just in case
-}
-
-int ft_parsing(char *input, t_data *data)
-{
-	int i = 0;
-	int start;
-	char quote;
-	t_token *token;
-
-	if(is_empty(input))
-		return 0;
-
-	while(input[i])
+	start = *i;
+	while (input[*i] && !ft_is_space(input[*i]) && !ft_is_operator(input[*i]))
 	{
-		//! skipping leading spaces
-		while(input[i] && is_space(input[i]))
-			i++;
-
-		if(!input[i])
-			break;
-		//if its an operator <>|
-		if (is_operator(input[i]))
+		if (input[*i] == '"' || input[*i] == '\'')
 		{
-
-			//we find the op type and make it into a new token
-			t_token_type type = get_operator_type(input[i], input[i+1]);
-			int len;
-			if(type == HEREDOC || type == APPEND)
-				len = 2;
-			else
-				len = 1;
-
-			token = ft_new_token(input + i, len, type);
-			if(!token)
-				return 0;
-			ft_add_token(data, token);
-			i += len;
+			quote = input[(*i)++];
+			while (input[*i] && input[*i] != quote)
+				(*i)++;
+			if (!input[*i])
+				return (ft_print_error(data,
+						"syntax error: unclosed quote\n", 258));
 		}
-		//otherwise its just a regular char
-		else
-		{
-			start = i;
-			//and while its not a space or anything important we skip it
-			while (input[i] && !is_space(input[i]) && !is_operator(input[i]))
-			{
-				// if we find a quote
-				if(input[i] == '"' || input[i] == '\'')
-				{
-					// hold it and skip to next
-					quote = input[i++];
-					//while its not over and it's not the quote char i++
-					while(input[i] && input[i] != quote)
-						i++;
-					//if end of word, it didn't find a matching
-					if(!input[i])
-						return ft_print_error(data, "syntax error: unclosed quote\n", 258);
-
-				}
-				i++;
-			}
-			//turn it into a new token
-			token = ft_new_token(input + start, i - start, WORD);
-			if(!token)
-				return 0;
-			ft_add_token(data, token);
-		}
-
-
+		(*i)++;
 	}
-	return 1;
+	token = ft_new_token(input + start, *i - start, WORD);
+	if (!token)
+		return (0);
+	ft_add_token(data, token);
+	return (1);
 }
 
+//need to skip spaces and check if it's an op <>|
+//and create tokens based on that
+//if we find a quote we need to find a matching one
+int	ft_parsing(char *input, t_data *data)
+{
+	int	i;
 
-//! old quote if on parsing
+	i = 0;
+	if (ft_is_empty(input))
+		return (0);
+	while (input[i])
+	{
+		while (input[i] && ft_is_space(input[i]))
+			i++;
+		if (!input[i])
+			break ;
+		if (ft_is_operator(input[i]))
+		{
+			if (!ft_parse_operator(input, &i, data))
+				return (0);
+		}
+		else if (!ft_parse_word(input, &i, data))
+			return (0);
+	}
+	return (1);
+}
 
-//* if quotes
-// if(input[i] == '"' || input[i] == '\'')
+//! old parsing just in case
+// int	ft_parsing(char *input, t_data *data)
 // {
-// 	quote = input[i];
-// 	i++;
-// 	start = i;
+// 	int		i;
+// 	int		start;
+// 	char	quote;
+// 	t_token	*token;
 
-//* find matching quote
-// 	while(input[i] && input[i] != quote)
-// 		i++;
-//* if not found error
-// 	if(!input[i])
-// 		return ft_print_error(data, "syntax error: unclosed quote\n", 258);
+// 	i = 0;
+// 	if(ft_is_empty(input))
+// 		return (0);
 
-//* 	else it creates a new token with the inbetween quotes
-// 	token = ft_new_token(input + start, i - start, WORD);
-// 	if(!token)
-// 		return 0;
-// 	ft_add_token(data, token);
-// 	i++;
+// 	while(input[i])
+// 	{
+//
+// 		while(input[i] && ft_is_space(input[i]))
+// 			i++;
 
+// 		if(!input[i])
+// 			break;
+//
+// 		if (ft_is_operator(input[i]))
+// 		{
+
+//
+// 			t_token_type type = ft_get_operator_type(input[i], input[i+1]);
+// 			int len;
+// 			if(type == HEREDOC || type == APPEND)
+// 				len = 2;
+// 			else
+// 				len = 1;
+
+// 			token = ft_new_token(input + i, len, type);
+// 			if(!token)
+// 				return 0;
+// 			ft_add_token(data, token);
+// 			i += len;
+// 		}
+//
+// 		else
+// 		{
+// 			start = i;
+//
+// 			while (input[i] && !ft_is_space(input[i])
+					//  && !ft_is_operator(input[i]))
+// 			{
+//
+// 				if(input[i] == '"' || input[i] == '\'')
+// 				{
+//
+// 					quote = input[i++];
+//
+// 					while(input[i] && input[i] != quote)
+// 						i++;
+//
+// 					if(!input[i])
+// 						return ft_print_error(data,
+//										 "syntax error: unclosed quote\n", 258);
+
+// 				}
+// 				i++;
+// 			}
+//
+// 			token = ft_new_token(input + start, i - start, WORD);
+// 			if(!token)
+// 				return 0;
+// 			ft_add_token(data, token);
+// 		}
+// 	}
+// 	return 1;
 // }

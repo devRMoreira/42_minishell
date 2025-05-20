@@ -6,25 +6,17 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:00:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/12 17:31:41 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:38:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static void free_envp(char **envp)
+void	ft_free_tokens(t_token *tokens)
 {
-	int i = -1;
-	while(envp && envp[++i])
-		free(envp[i]);
-	free(envp);
-}
+	t_token	*temp;
 
-void ft_free_tokens(t_token *tokens)
-{
-	t_token *temp;
-
-	while(tokens)
+	while (tokens)
 	{
 		temp = tokens->next;
 		free(tokens->input);
@@ -33,18 +25,18 @@ void ft_free_tokens(t_token *tokens)
 	}
 }
 
-static void free_cmds(t_cmd *cmds)
+static void	free_cmds(t_cmd *cmds)
 {
-	t_cmd *temp;
-	int i;
+	t_cmd	*temp;
+	int		i;
 
-	while(cmds)
+	while (cmds)
 	{
 		temp = cmds->next;
 		i = -1;
-		if(cmds->argv)
+		if (cmds->argv)
 		{
-			while(cmds->argv[++i])
+			while (cmds->argv[++i])
 				free(cmds->argv[i]);
 			free(cmds->argv);
 		}
@@ -54,21 +46,23 @@ static void free_cmds(t_cmd *cmds)
 	}
 }
 
-void ft_free_data(t_data *data)
+void	ft_free_split(char **strs)
 {
-	if(!data)
+	int	i;
+
+	i = -1;
+	while (strs && strs[++i])
+		free(strs[i]);
+	free(strs);
+}
+
+void	ft_free_data(t_data *data)
+{
+	if (!data)
 		return ;
 	free(data->input);
-	free_envp(data->envp);
+	ft_free_split(data->envp);
 	ft_free_tokens(data->tokens);
 	free_cmds(data->cmds);
 	free(data);
-}
-
-void ft_free_split(char **strs)
-{
-	int i = -1;
-	while(strs && strs[++i])
-		free(strs[i]);
-	free(strs);
 }

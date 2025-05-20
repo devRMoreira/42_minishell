@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:58:45 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:54:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int main(int ac, char **av, char **envp)
 
 	}
 
-	status = data->exit_status;
+	status = data->exit_code;
 	rl_clear_history();
 	ft_free_data(data);
 	return status;

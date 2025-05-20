@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/15 16:34:56 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:17:35 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char *get_cmd_path(char *cmd, t_data *data)
 		return NULL;
 	}
 
-	char *path = ft_get_env_var(data, "PATH");
+	char *path = ft_get_env(data, "PATH");
 	if(!path)
 		return NULL;
 

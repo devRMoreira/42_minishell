@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/19 14:38:30 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:14:40 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_data
 {
 	char *input;
 	char **envp;
-	char *old_path;
 	int exit_status;
 	t_token *tokens;
 	t_cmd *cmds;
@@ -76,7 +75,8 @@ void ft_free_tokens(t_token *tokens);
 int ft_parsing(char *input, t_data *data);
 int ft_print_error(t_data *data, char* error, int exit_code);
 t_token *ft_new_token(char *str, int length, t_token_type type);
-char *ft_get_env_var(t_data *data, const char *val);
+int ft_set_env(t_data *data,  char *key, char *value);
+char *ft_get_env(t_data *data, char *val);
 void ft_add_token(t_data *data, t_token *token);
 void ft_free_data(t_data *data);
 void ft_free_split(char **paths);

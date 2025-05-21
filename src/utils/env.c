@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:52:25 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 18:26:53 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:37:25 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	*strjoin_3(char *str1, char *str2, char *str3)
 	len2 = ft_strlen(str2);
 	len3 = ft_strlen(str3);
 	total = len1 + len2 + len3 + 1;
-	*res = malloc(sizeof(char) * total);
+	res = malloc(sizeof(char) * total);
 	if (!res)
 		return (NULL);
 	ft_strlcpy(res, str1, total);

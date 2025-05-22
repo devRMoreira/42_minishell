@@ -6,15 +6,15 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/22 14:23:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:34:18 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 
-//TODO fix these quotes
-// minishell > l's'
+//TODO fix the quotes
+// minishell > l's' <- needs to be considered all together and work
 // minishell: 's: command not found
 
 static int	ft_parse_operator(char *input, int *i, t_data *data)
@@ -56,10 +56,7 @@ static int	ft_parse_word(char *input, int *i, t_data *data)
 		}
 		(*i)++;
 	}
-	if(quote)
-		token = ft_new_token(input + (start + 1), *i - start - 2, WORD);
-	else
-		token = ft_new_token(input + start, *i - start, WORD);
+	token = ft_new_token(input + start, *i - start, WORD);
 	if (!token)
 		return (0);
 	ft_add_token(data, token);

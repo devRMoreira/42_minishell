@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 18:11:58 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:50:23 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char			*ft_get_env(t_data *data, char *val);
 void			ft_add_token(t_data *data, t_token *token);
 void			ft_free_data(t_data *data);
 void			ft_free_split(char **paths);
+char			*ft_create_word(char *str1, char *str2);
 int				ft_is_empty(char *s);
 int				ft_is_space(char c);
 int				ft_is_operator(char c);

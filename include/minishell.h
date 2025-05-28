@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/26 13:50:23 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/28 15:35:07 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,18 @@ int				ft_env(t_data *data);
 int				ft_pwd(char **argv, t_data *data);
 char			**ft_build_argv(t_token *tokens);
 t_data			*ft_init_data(char **envp);
-void			ft_free_tokens(t_token *tokens);
 int				ft_parsing(char *input, t_data *data);
 int				ft_print_error(t_data *data, char *error, int exit_code);
 t_token			*ft_new_token(char *str, int length, t_token_type type);
 int				ft_set_env(t_data *data, char *key, char *value);
 char			*ft_get_env(t_data *data, char *val);
 void			ft_add_token(t_data *data, t_token *token);
+int				ft_parse_cmds(t_data *data);
+void			ft_free_tokens(t_token *tokens);
 void			ft_free_data(t_data *data);
+void			ft_free_cmds(t_cmd *cmds);
 void			ft_free_split(char **paths);
+t_cmd			*ft_new_cmd(void);
 char			*ft_create_word(char *str1, char *str2);
 int				ft_is_empty(char *s);
 int				ft_is_space(char c);

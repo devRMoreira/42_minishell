@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:00:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 17:38:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:22:41 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void	ft_free_tokens(t_token *tokens)
 		tokens = temp;
 	}
 }
-
-static void	free_cmds(t_cmd *cmds)
+void	ft_free_cmds(t_cmd *cmds)
 {
 	t_cmd	*temp;
 	int		i;
@@ -63,6 +62,6 @@ void	ft_free_data(t_data *data)
 	free(data->input);
 	ft_free_split(data->envp);
 	ft_free_tokens(data->tokens);
-	free_cmds(data->cmds);
+	ft_free_cmds(data->cmds);
 	free(data);
 }

@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/28 15:35:07 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 01:48:43 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <stdio.h>
+# include <fcntl.h>
 # include <errno.h>
 # include <limits.h>
 # include <stdlib.h>
@@ -61,7 +62,6 @@ typedef struct s_data
 
 }	t_data;
 
-void			ft_execute_command(char **argv, t_data *data);
 int				ft_is_builtin(char *cmd);
 int				ft_exec_builtin(char **argv, t_data *data);
 int				ft_cd(char **argv, t_data *data);
@@ -69,10 +69,12 @@ int				ft_echo(char **argv);
 int				ft_exit(char **argv, t_data *data);
 int				ft_env(t_data *data);
 int				ft_pwd(char **argv, t_data *data);
+void			ft_exec_cmds(t_data *data);
 char			**ft_build_argv(t_token *tokens);
 t_data			*ft_init_data(char **envp);
 int				ft_parsing(char *input, t_data *data);
 int				ft_print_error(t_data *data, char *error, int exit_code);
+int				ft_syntax_error(t_data *data, t_token *token);
 t_token			*ft_new_token(char *str, int length, t_token_type type);
 int				ft_set_env(t_data *data, char *key, char *value);
 char			*ft_get_env(t_data *data, char *val);

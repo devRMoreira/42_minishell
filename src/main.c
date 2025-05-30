@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/28 11:22:00 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 02:01:56 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ int main(int ac, char **av, char **envp)
 			{
 				add_history(data->input);
 
-				ft_parse_cmds(data);
+				if(!ft_parse_cmds(data))
+				{
+					free(data->input);
+					continue;
+				}
 
 				if(data->cmds)
 				{
@@ -81,7 +85,7 @@ int main(int ac, char **av, char **envp)
 					ft_free_cmds(data->cmds);
 					data->cmds = NULL;
 				}
-				//! no redir execution
+				// old no redir execution just in case
 				// char **argv = ft_build_argv(data->tokens);
 				// if(argv)
 				// {
@@ -97,7 +101,9 @@ int main(int ac, char **av, char **envp)
 		}
 		else
 		{
-			//TODO !input, signals, eof
+			rl_clear_history();
+			ft_free_data(data);
+			exit(data->exit_code);
 		}
 
 	}

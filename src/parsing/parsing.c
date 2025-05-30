@@ -6,15 +6,11 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/26 14:08:01 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 01:16:53 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-//TODO fix the quotes
-// minishell > l's' <- needs to be considered all together and work
-// minishell: 's: command not found
 
 static char *handle_quotes(char *input, int *i, t_data *data)
 {
@@ -27,7 +23,7 @@ static char *handle_quotes(char *input, int *i, t_data *data)
 	end_quote = ft_strchr(&input[*i], quote);
 	if(!end_quote)
 		return (ft_print_error(data,
-				"syntax error: unclosed quote\n", 258), NULL);
+				"syntax error: unclosed quote", 258), NULL);
 	part = ft_substr(input, *i, end_quote - &input[*i]);
 	if(!part)
 		return (NULL);

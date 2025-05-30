@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:07:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/28 15:59:18 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 00:52:38 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	total_tokens(t_token *tokens)
 	int	res;
 
 	res = 0;
-	while (tokens)
+	while (tokens && tokens->type == WORD)
 	{
 		res++;
 		tokens = tokens->next;
@@ -38,7 +38,7 @@ char	**ft_build_argv(t_token *tokens)
 		return (NULL);
 	temp = tokens;
 	i = 0;
-	while (temp->type == WORD)
+	while (temp && temp->type == WORD)
 	{
 		argv[i] = ft_strdup(temp->input);
 		if (!argv[i])

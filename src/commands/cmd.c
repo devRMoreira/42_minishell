@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 18:08:23 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 01:05:29 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	check_path(char **argv, t_data *data, char **path)
 	return (1);
 }
 
-void	ft_execute_command(char **argv, t_data *data)
+static void	execute_command(char **argv, t_data *data)
 {
 	pid_t	pid;
 	int		status;
@@ -111,4 +111,36 @@ void	ft_execute_command(char **argv, t_data *data)
 		else if (WIFSIGNALED(status))
 			data->exit_code = 128 + WTERMSIG(status);
 	}
+}
+
+//! no pipe yet
+void ft_exec_cmds(t_data *data)
+{
+	t_cmd *cmd = data->cmds;
+	int backup_stdin = dup(STDIN_FILENO);
+	int backup_stdout = dup(STDOUT_FILENO);
+
+	while(cmd)
+	{
+		if (!cmd->argv || !cmd->argv[0])
+		{
+			cmd = cmd->next;
+			continue;
+		}
+
+		//if it has fd's set them accordingly
+		if(cmd->input_fd != -1)
+			dup2(cmd->input_fd, STDIN_FILENO);
+		if(cmd->output_fd != -1)
+			dup2(cmd->output_fd, STDOUT_FILENO);
+
+
+		execute_command(cmd->argv, data);
+		dup2(backup_stdin, STDIN_FILENO);
+		dup2(backup_stdout, STDOUT_FILENO);
+		cmd = cmd->next;
+	}
+
+	close(backup_stdin);
+	close(backup_stdout);
 }

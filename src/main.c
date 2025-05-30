@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/30 02:01:56 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 02:40:25 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int main(int ac, char **av, char **envp)
 				// }
 			}
 
-			debugPrintTokens(data);
+			// debugPrintTokens(data);
 
 			//* free after it's used
 			free(data->input);

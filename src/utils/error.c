@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:56 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/30 02:01:36 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 02:52:49 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	ft_print_error(t_data *data, char *error, int exit_code)
 	return (exit_code);
 }
 
-int ft_syntax_error(t_data *data, t_token *token)
+int	ft_syntax_error(t_data *data, t_token *token)
 {
-	if(token == NULL)
+	if (token == NULL)
 		ft_print_error(data, "syntax error near unexpected token `newline'", 2);
 	else if (token->type == PIPE)
 		ft_print_error(data, "syntax error near unexpected token `|'", 2);

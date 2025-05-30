@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:43:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/26 13:51:14 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/05/30 02:03:24 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_is_empty(char *s)
 
 t_token_type	ft_get_operator_type(char c, char next)
 {
-	if (c == '|' && next != '|')
+	if (c == '|')
 		return (PIPE);
 	if (c == '<' && next == '<')
 		return (HEREDOC);

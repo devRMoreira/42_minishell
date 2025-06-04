@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/04 18:31:05 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:34:49 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
 	return (fd);
 }
 
-void	assign_fd(t_cmd *cmd, t_token_type type, int fd)
+static void	assign_fd(t_cmd *cmd, t_token_type type, int fd)
 {
 	if (type == REDIRIN || type == HEREDOC)
 	{
@@ -57,7 +57,7 @@ void	assign_fd(t_cmd *cmd, t_token_type type, int fd)
 	}
 }
 
-int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
+static int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
 {
 	int		fd;
 	char	*file;
@@ -81,7 +81,7 @@ int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
 	return (1);
 }
 
-t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
+static t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
 {
 	t_cmd	*cmd;
 

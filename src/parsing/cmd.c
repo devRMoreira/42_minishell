@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/03 15:33:10 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:24:29 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	clean_cmds(t_data *data)
 	}
 }
 
-static int	handle_redir(t_token_type type, char *input, t_data *data)
+static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
 {
 	int		fd;
 	char	*error;
@@ -50,70 +50,84 @@ static int	handle_redir(t_token_type type, char *input, t_data *data)
 	return (fd);
 }
 
-//we alloc a new new_cmd
-//if its the first loop we need to leave the first link on data
-//and always allocate the  new_cmd to a new one
-//build the cmds argv
-//gotta skip the same tokens to check if over or special chars
-//check for double pipe
-//if it's a redirect
-//deal with input redirs
-//leak check if it already has an fd set
-//deal with output redirs
-//we skip the redir token and the filename
-int	ft_parse_cmds(t_data *data)
+void	assign_fd(t_cmd *cmd, t_token_type type, int fd)
+{
+	if (type == REDIRIN || type == HEREDOC)
+	{
+		if (cmd->input_fd != -1)
+			close(cmd->input_fd);
+		cmd->input_fd = fd;
+	}
+	else
+	{
+		if (cmd->output_fd != -1)
+			close(cmd->output_fd);
+		cmd->output_fd = fd;
+	}
+}
+
+int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
 {
 	int		fd;
 	char	*file;
-	t_cmd	*new_cmd;
-	t_cmd	*last_cmd;
+
+	if (*temp && (*temp)->type == PIPE
+		&& (*temp)->next && (*temp)->next->type == PIPE)
+		return (ft_syntax_error(data, (*temp)->next),
+			clean_cmds(data), 0);
+	while (*temp && (*temp)->type != PIPE)
+	{
+		if (!(*temp)->next || (*temp)->next->type != WORD)
+			return (ft_syntax_error(data, (*temp)->next),
+				clean_cmds(data), 0);
+		file = (*temp)->next->input;
+		fd = handle_fd_redir((*temp)->type, file, data);
+		if (fd < 0)
+			return (clean_cmds(data), 0);
+		assign_fd(cmd, (*temp)->type, fd);
+		*temp = (*temp)->next->next;
+	}
+	return (1);
+}
+
+t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
+{
+	t_cmd	*cmd;
+
+	cmd = ft_new_cmd();
+	if (!cmd)
+		return (clean_cmds(data), NULL);
+	if (!data->cmds)
+		data->cmds = cmd;
+	else
+		(*last)->next = cmd;
+	*last = cmd;
+	cmd->argv = ft_build_argv(*temp);
+	if (!cmd->argv)
+		return (clean_cmds(data), NULL);
+	while (*temp && (*temp)->type == WORD)
+		*temp = (*temp)->next;
+	return (cmd);
+}
+
+int	ft_parse_cmds(t_data *data)
+{
+	t_cmd	*new;
+	t_cmd	*last;
 	t_token	*temp;
 
 	temp = data->tokens;
-	last_cmd = NULL;
+	last = NULL;
 	data->cmds = NULL;
 	if (temp && temp->type == PIPE)
 		return (ft_syntax_error(data, temp), 0);
 	while (temp)
 	{
-		new_cmd = ft_new_cmd();
-		if (!new_cmd)
-			return (clean_cmds(data), 0);
-		if (!data->cmds)
-			data->cmds = new_cmd;
-		else
-			last_cmd->next = new_cmd;
-		last_cmd = new_cmd;
-		new_cmd->argv = ft_build_argv(temp);
-		if (!new_cmd->argv)
-			return (clean_cmds(data), 0);
-		while (temp && temp->type == WORD)
-			temp = temp->next;
-		if (temp && temp->type == PIPE
-			&& temp->next && temp->next->type == PIPE)
-			return (ft_syntax_error(data, temp->next), clean_cmds(data), 0);
-		while (temp && temp->type != PIPE)
-		{
-			if (temp->next == NULL || temp->next->type != WORD)
-				return (ft_syntax_error(data, temp->next), clean_cmds(data), 0);
-			file = temp->next->input;
-			fd = handle_redir(temp->type, file, data);
-			if (fd < 0)
-				return (clean_cmds(data), 0);
-			if (temp->type == REDIRIN || temp->type == HEREDOC)
-			{
-				if (last_cmd->input_fd != -1)
-					close(last_cmd->input_fd);
-				last_cmd->input_fd = fd;
-			}
-			else
-			{
-				if (last_cmd->output_fd != -1)
-					close(last_cmd->output_fd);
-				last_cmd->output_fd = fd;
-			}
-			temp = temp->next->next;
-		}
+		new = setup_cmd(data, &last, &temp);
+		if (!new)
+			return (0);
+		if (!parse_redirects(data, new, &temp))
+			return (0);
 		if (temp && temp->type == PIPE)
 			temp = temp->next;
 	}

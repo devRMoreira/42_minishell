@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:43:55 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/28 11:22:58 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:31:30 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,13 @@ t_cmd	*ft_new_cmd(void)
 		cmd->next = NULL;
 	}
 	return (cmd);
+}
+
+void	ft_clean_cmds(t_data *data)
+{
+	if (data->cmds)
+	{
+		ft_free_cmds(data->cmds);
+		data->cmds = NULL;
+	}
 }

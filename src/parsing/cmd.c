@@ -6,20 +6,11 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/04 18:24:29 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:31:05 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static void	clean_cmds(t_data *data)
-{
-	if (data->cmds)
-	{
-		ft_free_cmds(data->cmds);
-		data->cmds = NULL;
-	}
-}
 
 static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
 {
@@ -74,16 +65,16 @@ int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
 	if (*temp && (*temp)->type == PIPE
 		&& (*temp)->next && (*temp)->next->type == PIPE)
 		return (ft_syntax_error(data, (*temp)->next),
-			clean_cmds(data), 0);
+			ft_clean_cmds(data), 0);
 	while (*temp && (*temp)->type != PIPE)
 	{
 		if (!(*temp)->next || (*temp)->next->type != WORD)
 			return (ft_syntax_error(data, (*temp)->next),
-				clean_cmds(data), 0);
+				ft_clean_cmds(data), 0);
 		file = (*temp)->next->input;
 		fd = handle_fd_redir((*temp)->type, file, data);
 		if (fd < 0)
-			return (clean_cmds(data), 0);
+			return (ft_clean_cmds(data), 0);
 		assign_fd(cmd, (*temp)->type, fd);
 		*temp = (*temp)->next->next;
 	}
@@ -96,7 +87,7 @@ t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
 
 	cmd = ft_new_cmd();
 	if (!cmd)
-		return (clean_cmds(data), NULL);
+		return (ft_clean_cmds(data), NULL);
 	if (!data->cmds)
 		data->cmds = cmd;
 	else
@@ -104,7 +95,7 @@ t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
 	*last = cmd;
 	cmd->argv = ft_build_argv(*temp);
 	if (!cmd->argv)
-		return (clean_cmds(data), NULL);
+		return (ft_clean_cmds(data), NULL);
 	while (*temp && (*temp)->type == WORD)
 		*temp = (*temp)->next;
 	return (cmd);

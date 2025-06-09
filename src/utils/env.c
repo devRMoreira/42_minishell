@@ -6,33 +6,11 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:52:25 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/21 15:37:25 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:00:06 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-//behold an amalgamation of strings
-static char	*strjoin_3(char *str1, char *str2, char *str3)
-{
-	size_t	len1;
-	size_t	len2;
-	size_t	len3;
-	size_t	total;
-	char	*res;
-
-	len1 = ft_strlen(str1);
-	len2 = ft_strlen(str2);
-	len3 = ft_strlen(str3);
-	total = len1 + len2 + len3 + 1;
-	res = malloc(sizeof(char) * total);
-	if (!res)
-		return (NULL);
-	ft_strlcpy(res, str1, total);
-	ft_strlcat(res, str2, total);
-	ft_strlcat(res, str3, total);
-	return (res);
-}
 
 static int	update_key(char **envp, char *key, char *val)
 {
@@ -42,7 +20,7 @@ static int	update_key(char **envp, char *key, char *val)
 
 	i = 0;
 	key_len = ft_strlen(key);
-	new_key = strjoin_3(key, "=", val);
+	new_key = ft_strjoin_3(key, "=", val);
 	if (!new_key)
 		return (1);
 	while (envp[i])
@@ -68,7 +46,7 @@ static int	add_new_key(t_data *data, char *key, char *val)
 
 	i = 0;
 	j = -1;
-	new_key = strjoin_3(key, "=", val);
+	new_key = ft_strjoin_3(key, "=", val);
 	if (!new_key)
 		return (1);
 	while (data->envp[i])

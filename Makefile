@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/05/30 02:12:44 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/06/09 14:12:15 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,12 +24,14 @@ SRC = src/main.c \
 	src/commands/builtins/pwd.c \
 	src/commands/cmd_paths.c \
 	src/commands/cmd.c \
+	src/expansion/expansion.c \
 	src/memory/cmd.c \
 	src/memory/data.c \
 	src/memory/free.c \
 	src/memory/token.c \
 	src/parsing/cmd.c \
 	src/parsing/parsing.c \
+	src/utils/strings.c \
 	src/utils/builtins.c \
 	src/utils/cmd.c \
 	src/utils/env.c \

@@ -6,13 +6,13 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/30 02:16:10 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:33:42 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char	*handle_quotes(char *input, int *i, t_data *data)
+static char	*handle_quotes(char *input, int *i)
 {
 	char	quote;
 	char	*end_quote;
@@ -22,8 +22,7 @@ static char	*handle_quotes(char *input, int *i, t_data *data)
 	(*i)++;
 	end_quote = ft_strchr(&input[*i], quote);
 	if (!end_quote)
-		return (ft_print_error(data,
-				"syntax error: unclosed quote", 258), NULL);
+		return (NULL);
 	part = ft_substr(input, *i, end_quote - &input[*i]);
 	if (!part)
 		return (NULL);
@@ -50,7 +49,7 @@ static int	parse_operator(char *input, int *i, t_data *data)
 	return (1);
 }
 
-static char	*collect_word(char *input, int *i, t_data *data)
+static char	*collect_word(char *input, int *i)
 {
 	char	*word;
 	char	*part;
@@ -59,7 +58,7 @@ static char	*collect_word(char *input, int *i, t_data *data)
 	while (input[*i] && !ft_is_space(input[*i]) && !ft_is_operator(input[*i]))
 	{
 		if (input[*i] == '\'' || input[*i] == '"')
-			part = handle_quotes(input, i, data);
+			part = handle_quotes(input, i);
 		else
 			part = ft_substr(input, (*i)++, 1);
 		if (!part)
@@ -74,7 +73,7 @@ static int	parse_word(char *input, int *i, t_data *data)
 	char	*word;
 	t_token	*token;
 
-	word = collect_word(input, i, data);
+	word = collect_word(input, i);
 	if (!word)
 		return (0);
 	token = ft_new_token(word, ft_strlen(word), WORD);

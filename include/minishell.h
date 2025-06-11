@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/09 14:59:42 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:32:01 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int				ft_check_path(char **argv, t_data *data, char **path);
 char			**ft_build_argv(t_token *tokens);
 t_data			*ft_init_data(char **envp);
 int				ft_parsing(char *input, t_data *data);
+int				ft_syntax_check(t_data *data, char *input);
 int				ft_print_error(t_data *data, char *error, int exit_code);
 int				ft_syntax_error(t_data *data, t_token *token);
 t_token			*ft_new_token(char *str, int length, t_token_type type);

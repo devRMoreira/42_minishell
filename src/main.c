@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/11 10:58:28 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:25:07 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,18 @@ int main(int ac, char **av, char **envp)
 		if(data->input)
 		{
 
-			add_history(data->input);
 			//TODO offset loop cleanup to another func later
 			//always free tokens
 			ft_free_tokens(data->tokens);
 			data->tokens = NULL;
+
+			if(!ft_syntax_check(data, data->input))
+			{
+				free(data->input);
+				continue;
+			}
+
+			add_history(data->input);
 
 			char *expand = ft_expand(data, data->input);
 			//* free after it's used

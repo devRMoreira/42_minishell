@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/09 14:57:51 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/11 10:58:28 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	t_data *data = ft_init_data(envp);
-	char	*expansion;
 	int status;
 
 	while(1)
@@ -64,21 +63,19 @@ int main(int ac, char **av, char **envp)
 		if(data->input)
 		{
 
+			add_history(data->input);
 			//TODO offset loop cleanup to another func later
 			//always free tokens
 			ft_free_tokens(data->tokens);
 			data->tokens = NULL;
 
-			//*add to RL history if ok
-			expansion = ft_expand(data, data->input);
-			if (!expansion)
-			{
-				free (data->input);
-				continue;
-			}
+			char *expand = ft_expand(data, data->input);
+			//* free after it's used
+			free(data->input);
+			data->input = expand;
+
 			if(ft_parsing(data->input, data))
 			{
-				add_history(data->input);
 
 				if(!ft_parse_cmds(data))
 				{
@@ -103,8 +100,7 @@ int main(int ac, char **av, char **envp)
 
 			// debugPrintTokens(data);
 
-			//* free after it's used
-			free(data->input);
+
 		}
 		else
 		{

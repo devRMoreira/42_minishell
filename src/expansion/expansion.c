@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/09 14:52:22 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/11 11:07:40 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ char	*expand_var(t_data *data, char *str, int *i)
 	return (res);
 }
 
-
 char	*ft_expand(t_data *data, char *str)
 {
 	int i;
@@ -116,6 +115,14 @@ char	*ft_expand(t_data *data, char *str)
 				return (free(res), NULL);
 			while(str[i] && str[i] != '"')
 			{
+				if(str[i] == '\'')
+				{
+					temp = ft_strjoin(segment, "'");
+					free(segment);
+					segment = temp;
+					i++;
+					continue;
+				}
 				expand = expand_var(data, str, &i);
 				temp = ft_strjoin(segment, expand);
 				free(segment);
@@ -131,16 +138,27 @@ char	*ft_expand(t_data *data, char *str)
 		}
 		else
 		{
-			start = i;
-			while(str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '"')
-				i++;
-			temp = ft_substr(str, start, i - start);
-			if(!temp)
-				return (free(res), NULL);
-			segment = ft_strjoin(res, temp);
-			free(temp);
-			free(res);
-			res = segment;
+			if (str[i] == '$')
+			{
+				expand = expand_var(data, str, &i);
+				segment = ft_strjoin(res, expand);
+				free(res);
+				free(expand);
+				res = segment;
+			}
+			else
+			{
+				start = i;
+				while(str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '"')
+					i++;
+				temp = ft_substr(str, start, i - start);
+				if(!temp)
+					return (free(res), NULL);
+				segment = ft_strjoin(res, temp);
+				free(temp);
+				free(res);
+				res = segment;
+			}
 		}
 	}
 	return (res);

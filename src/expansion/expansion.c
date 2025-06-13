@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/11 11:07:40 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/13 11:34:13 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*expand_var(t_data *data, char *str, int *i)
 		if (str[*i] == '$')
 		{
 			(*i)++;
+			//exit code
 			if(str[*i] == '?')
 			{
 				temp = ft_itoa(data->exit_code);
@@ -37,6 +38,7 @@ char	*expand_var(t_data *data, char *str, int *i)
 				res = value;
 				(*i)++;
 			}
+			//check if its a var, must start with _ OR letter
 			else if(ft_isalpha(str[*i]) || str[*i] == '_')
 			{
 				start = *i;
@@ -53,6 +55,7 @@ char	*expand_var(t_data *data, char *str, int *i)
 				free(res);
 				res = value;
 			}
+			//literal $
 			else
 			{
 				value = ft_strjoin(res, "$");
@@ -61,6 +64,7 @@ char	*expand_var(t_data *data, char *str, int *i)
 			}
 		}
 		else
+		//plain text
 		{
 			start = *i;
 			while(str[*i] && str[*i] != '$' && str[*i] != '\'' && str[*i] != '"')
@@ -89,9 +93,10 @@ char	*ft_expand(t_data *data, char *str)
 	if (!res)
 		return (NULL);
 
-	//single quotes is literal
 	while(str[i])
 	{
+		//single quotes is literal
+		//so we copy everything until next single
 		if(str[i] == '\'')
 		{
 			start = ++i;
@@ -107,6 +112,8 @@ char	*ft_expand(t_data *data, char *str)
 			if (str[i] == '\'')
 				i++;
 		}
+		//double quotes
+		//we call helper to expand //* inside
 		else if (str[i] == '"')
 		{
 			i++;
@@ -138,6 +145,7 @@ char	*ft_expand(t_data *data, char *str)
 		}
 		else
 		{
+			//its just a var so call helper otherwise its plain text
 			if (str[i] == '$')
 			{
 				expand = expand_var(data, str, &i);

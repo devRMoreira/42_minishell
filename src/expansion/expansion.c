@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 15:00:17 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:02:51 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,10 @@ char	*ft_expand(t_data *data, char *str)
 		//so we copy everything until next single
 		if(str[i] == '\'')
 		{
+			temp = ft_strjoin(res, "'");
+			free(res);
+			res = temp;
+
 			start = ++i;
 			while (str[i] && str[i] != '\'')
 				i++;
@@ -110,7 +114,12 @@ char	*ft_expand(t_data *data, char *str)
 			free(temp);
 			res = segment;
 			if (str[i] == '\'')
+			{
+				temp = ft_strjoin(res, "'");
+				free(res);
+				res = temp;
 				i++;
+			}
 		}
 		//double quotes
 		//we call helper to expand //* inside

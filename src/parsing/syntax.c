@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 17:57:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/11 18:54:22 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/16 13:50:23 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int ft_syntax_check(t_data *data, char *input)
 				i++;
 			if(!input[i])
 				return (ft_print_error(data, "syntax error: unclosed quote", 2), 0);
+			i++;
+			continue;
 		}
 
 		else if (input[i] == '|' && input[i + 1] == '|')
@@ -51,11 +53,11 @@ int ft_syntax_check(t_data *data, char *input)
 				if(!input[i] || ft_is_operator(input[i]))
 				{
 					if(op == '>')
-					return (ft_print_error(data, "syntax error near unexpected token `>'", 2), 0);
+						return (ft_print_error(data, "syntax error near unexpected token `>'", 2), 0);
 					else
-					return (ft_print_error(data, "syntax error near unexpected token `<'", 2), 0);
-					continue;
+						return (ft_print_error(data, "syntax error near unexpected token `<'", 2), 0);
 				}
+				continue;
 			}
 			i++;
 		}

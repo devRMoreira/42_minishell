@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/13 11:34:13 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:00:17 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,10 @@ char	*ft_expand(t_data *data, char *str)
 		//we call helper to expand //* inside
 		else if (str[i] == '"')
 		{
+			temp = ft_strjoin(res, "\"");
+			free(res);
+			res = temp;
+
 			i++;
 			segment = ft_strdup("");
 			if(!segment)
@@ -140,8 +144,14 @@ char	*ft_expand(t_data *data, char *str)
 			free(res);
 			free(segment);
 			res = temp;
+
 			if (str[i] == '"')
+			{
+				temp = ft_strjoin(res, "\"");
+				free(res);
+				res = temp;
 				i++;
+			}
 		}
 		else
 		{

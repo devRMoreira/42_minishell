@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 14:06:15 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:04:21 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int main(int ac, char **av, char **envp)
 
 			if(!ft_syntax_check(data, data->input))
 			{
-				ft_printf("failed syntax\n");
+				// ft_printf("failed syntax\n");
 				free(data->input);
 				continue;
 			}
@@ -78,25 +78,25 @@ int main(int ac, char **av, char **envp)
 			add_history(data->input);
 
 			char *expand = ft_expand(data, data->input);
-			ft_printf("expand\n");
+			// ft_printf("expand\n");
 			//* free after it's used
 			free(data->input);
 			data->input = expand;
 
 			if(ft_parsing(data->input, data))
 			{
-				debugPrintTokens(data);
-				ft_printf("passed parsing\n");
+				// debugPrintTokens(data);
+				// ft_printf("passed parsing\n");
 				if(!ft_parse_cmds(data))
 				{
-					ft_printf("failed parse cmds\n");
+					// ft_printf("failed parse cmds\n");
 					free(data->input);
 					continue;
 				}
 
 				if(data->cmds)
 				{
-					ft_printf("theres data-> cmds\n");
+					// ft_printf("theres data-> cmds\n");
 					ft_exec_cmds(data);
 					ft_free_cmds(data->cmds);
 					data->cmds = NULL;

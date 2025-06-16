@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/04 18:34:49 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:49:37 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
 		return (-1);
 	if (fd < 0)
 	{
-		error = ft_strjoin(input, ": No such file or directory");
+		error = ft_strjoin_3(input, ": ", strerror(errno));
 		if (error)
 		{
 			ft_print_error(data, error, 1);

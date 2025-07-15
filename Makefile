@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/06/11 18:31:45 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/07/15 14:39:38 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,10 @@ SRC = src/main.c \
 	src/utils/cmd.c \
 	src/utils/env.c \
 	src/utils/error.c \
+	src/utils/expansion.c \
 	src/utils/parsing.c \
 	src/utils/signal.c \
+	src/utils/syntax.c \
 
 OBJ = $(SRC:.c=.o)
 

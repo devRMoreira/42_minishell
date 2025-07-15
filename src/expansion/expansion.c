@@ -6,187 +6,139 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 16:02:51 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/15 14:30:09 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*expand_var(t_data *data, char *str, int *i)
+static char	*handle_single_quotes(char *str, int *i, char *res)
 {
-	char *value;
-	char *res;
-	char *temp;
-	int start;
+	int		start;
+	char	*temp;
+	char	*segment;
 
-	res = ft_strdup("");
-	if (!res)
-		return (NULL);
-
-	while(str[*i] && str[*i] != '\'' && str[*i] != '"')
+	temp = ft_strjoin(res, "'");
+	free(res);
+	res = temp;
+	start = ++(*i);
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	temp = ft_substr(str, start, *i - start);
+	if (!temp)
+		return (free(res), NULL);
+	segment = ft_strjoin(res, temp);
+	free(res);
+	free(temp);
+	res = segment;
+	if (str[*i] == '\'')
 	{
-		if (str[*i] == '$')
-		{
-			(*i)++;
-			//exit code
-			if(str[*i] == '?')
-			{
-				temp = ft_itoa(data->exit_code);
-				value = ft_strjoin(res, temp);
-				free(temp);
-				free(res);
-				res = value;
-				(*i)++;
-			}
-			//check if its a var, must start with _ OR letter
-			else if(ft_isalpha(str[*i]) || str[*i] == '_')
-			{
-				start = *i;
-				while(str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
-					(*i)++;
-				temp = ft_substr(str, start, *i - start);
-				value = ft_get_env(data, temp);
-				free(temp);
-				if (value)
-					temp = value;
-				else
-					temp = "";
-				value = ft_strjoin(res, temp);
-				free(res);
-				res = value;
-			}
-			//literal $
-			else
-			{
-				value = ft_strjoin(res, "$");
-				free(res);
-				res = value;
-			}
-		}
-		else
-		//plain text
-		{
-			start = *i;
-			while(str[*i] && str[*i] != '$' && str[*i] != '\'' && str[*i] != '"')
-				(*i)++;
-			temp = ft_substr(str, start, *i - start);
-			value = ft_strjoin(res, temp);
-			free(temp);
-			free(res);
-			res = value;
-		}
+		temp = ft_strjoin(res, "'");
+		free(res);
+		res = temp;
+		(*i)++;
 	}
 	return (res);
 }
 
+static char	*process_inside_double_quotes(t_data *data, char *str, int *i)
+{
+	char	*segment;
+	char	*temp;
+	char	*expand;
+
+	segment = ft_strdup("");
+	if (!segment)
+		return (NULL);
+	while (str[*i] && str[*i] != '"')
+	{
+		if (str[*i] == '\'')
+		{
+			temp = ft_strjoin(segment, "'");
+			free(segment);
+			segment = temp;
+			(*i)++;
+			continue ;
+		}
+		expand = ft_expand_var(data, str, i);
+		temp = ft_strjoin(segment, expand);
+		free(segment);
+		free(expand);
+		segment = temp;
+	}
+	return (segment);
+}
+
+static char	*handle_double_quotes(t_data *data, char *str, int *i, char *res)
+{
+	char	*temp;
+	char	*segment;
+
+	temp = ft_strjoin(res, "\"");
+	free(res);
+	res = temp;
+	(*i)++;
+	segment = process_inside_double_quotes(data, str, i);
+	if (!segment)
+		return (free(res), NULL);
+	temp = ft_strjoin(res, segment);
+	free(res);
+	free(segment);
+	res = temp;
+	if (str[*i] == '"')
+	{
+		temp = ft_strjoin(res, "\"");
+		free(res);
+		res = temp;
+		(*i)++;
+	}
+	return (res);
+}
+
+static char	*handle_dollar_or_text(t_data *data, char *str, int *i, char *res)
+{
+	int		start;
+	char	*temp;
+	char	*segment;
+	char	*expand;
+
+	if (str[*i] == '$')
+	{
+		expand = ft_expand_var(data, str, i);
+		segment = ft_strjoin(res, expand);
+		free(res);
+		free(expand);
+		return (segment);
+	}
+	start = *i;
+	while (str[*i] && str[*i] != '$' && str[*i] != '\'' && str[*i] != '"')
+		(*i)++;
+	temp = ft_substr(str, start, *i - start);
+	if (!temp)
+		return (free(res), NULL);
+	segment = ft_strjoin(res, temp);
+	free(temp);
+	free(res);
+	return (segment);
+}
+
 char	*ft_expand(t_data *data, char *str)
 {
-	int i;
-	int start;
-	char *res;
-	char *temp;
-	char *segment;
-	char *expand;
+	int		i;
+	char	*res;
 
 	i = 0;
 	res = ft_strdup("");
 	if (!res)
 		return (NULL);
-
-	while(str[i])
+	while (str[i])
 	{
-		//single quotes is literal
-		//so we copy everything until next single
-		if(str[i] == '\'')
-		{
-			temp = ft_strjoin(res, "'");
-			free(res);
-			res = temp;
-
-			start = ++i;
-			while (str[i] && str[i] != '\'')
-				i++;
-			temp = ft_substr(str, start, i - start);
-			if (!temp)
-				return (free(res), NULL);
-			segment = ft_strjoin(res, temp);
-			free(res);
-			free(temp);
-			res = segment;
-			if (str[i] == '\'')
-			{
-				temp = ft_strjoin(res, "'");
-				free(res);
-				res = temp;
-				i++;
-			}
-		}
-		//double quotes
-		//we call helper to expand //* inside
+		if (str[i] == '\'')
+			res = handle_single_quotes(str, &i, res);
 		else if (str[i] == '"')
-		{
-			temp = ft_strjoin(res, "\"");
-			free(res);
-			res = temp;
-
-			i++;
-			segment = ft_strdup("");
-			if(!segment)
-				return (free(res), NULL);
-			while(str[i] && str[i] != '"')
-			{
-				if(str[i] == '\'')
-				{
-					temp = ft_strjoin(segment, "'");
-					free(segment);
-					segment = temp;
-					i++;
-					continue;
-				}
-				expand = expand_var(data, str, &i);
-				temp = ft_strjoin(segment, expand);
-				free(segment);
-				free(expand);
-				segment = temp;
-			}
-			temp = ft_strjoin(res, segment);
-			free(res);
-			free(segment);
-			res = temp;
-
-			if (str[i] == '"')
-			{
-				temp = ft_strjoin(res, "\"");
-				free(res);
-				res = temp;
-				i++;
-			}
-		}
+			res = handle_double_quotes(data, str, &i, res);
 		else
-		{
-			//its just a var so call helper otherwise its plain text
-			if (str[i] == '$')
-			{
-				expand = expand_var(data, str, &i);
-				segment = ft_strjoin(res, expand);
-				free(res);
-				free(expand);
-				res = segment;
-			}
-			else
-			{
-				start = i;
-				while(str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '"')
-					i++;
-				temp = ft_substr(str, start, i - start);
-				if(!temp)
-					return (free(res), NULL);
-				segment = ft_strjoin(res, temp);
-				free(temp);
-				free(res);
-				res = segment;
-			}
-		}
+			res = handle_dollar_or_text(data, str, &i, res);
 	}
 	return (res);
 }

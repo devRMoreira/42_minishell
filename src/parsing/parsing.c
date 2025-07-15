@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:45:46 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 15:03:52 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/15 14:43:20 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ static char	*handle_quotes(char *input, int *i)
 	if (!part)
 		return (NULL);
 	*i += (end_quote - &input[*i]) + 1;
-	// printf("After quotes: i=%d, char='%c'\n", *i, input[*i]);
 	return (part);
 }
+// printf("After quotes: i=%d, char='%c'\n", *i, input[*i]);
 
 static int	parse_operator(char *input, int *i, t_data *data)
 {
@@ -57,7 +57,8 @@ static char	*collect_word(char *input, int *i)
 	char	*temp;
 
 	word = ft_strdup("");
-	while (input[*i] && ((!ft_is_space(input[*i]) && !ft_is_operator(input[*i])) || input[*i] == '\'' || input[*i] == '"'))
+	while (input[*i] && ((!ft_is_space(input[*i]) && !ft_is_operator(input[*i]))
+			|| input[*i] == '\'' || input[*i] == '"'))
 	{
 		if (input[*i] == '\'' || input[*i] == '"')
 			part = handle_quotes(input, i);
@@ -65,13 +66,12 @@ static char	*collect_word(char *input, int *i)
 			part = ft_substr(input, (*i)++, 1);
 		if (!part)
 			return (free(word), NULL);
-		//printf("After handle_quotes: i=%d, char='%c'\n", *i, input[*i]);
-
 		temp = ft_create_word(word, part);
 		word = temp;
 	}
 	return (word);
 }
+	//printf("After handle_quotes: i=%d, char='%c'\n", *i, input[*i]);
 
 static int	parse_word(char *input, int *i, t_data *data)
 {

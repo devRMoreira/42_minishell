@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/11 18:32:01 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/15 14:43:54 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				ft_exec_builtin(char **argv, t_data *data);
 int				ft_cd(char **argv, t_data *data);
 int				ft_echo(char **argv);
 int				ft_exit(char **argv, t_data *data);
-char	*ft_expand(t_data *data, char *str);
+char			*ft_expand(t_data *data, char *str);
 int				ft_env(t_data *data);
 char			*ft_strjoin_3(char *str1, char *str2, char *str3);
 int				ft_pwd(char **argv, t_data *data);
@@ -76,6 +76,7 @@ int				ft_check_path(char **argv, t_data *data, char **path);
 char			**ft_build_argv(t_token *tokens);
 t_data			*ft_init_data(char **envp);
 int				ft_parsing(char *input, t_data *data);
+char			*ft_expand_var(t_data *data, char *str, int *i);
 int				ft_syntax_check(t_data *data, char *input);
 int				ft_print_error(t_data *data, char *error, int exit_code);
 int				ft_syntax_error(t_data *data, t_token *token);
@@ -84,6 +85,7 @@ int				ft_set_env(t_data *data, char *key, char *value);
 char			*ft_get_env(t_data *data, char *val);
 void			ft_add_token(t_data *data, t_token *token);
 int				ft_parse_cmds(t_data *data);
+char			*ft_expand_var(t_data *data, char *str, int *i);
 void			ft_free_tokens(t_token *tokens);
 void			ft_clean_cmds(t_data *data);
 void			ft_free_data(t_data *data);
@@ -95,5 +97,6 @@ int				ft_is_empty(char *s);
 int				ft_is_space(char c);
 int				ft_is_operator(char c);
 t_token_type	ft_get_operator_type(char c, char next);
+int				ft_check_pipe_end(t_data *data, char *input);
 
 #endif

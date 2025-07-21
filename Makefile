@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/07/15 14:39:38 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/07/21 14:17:28 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC = src/main.c \
 	src/commands/builtins/echo.c \
 	src/commands/builtins/env.c \
 	src/commands/builtins/exit.c \
+	src/commands/builtins/export.c \
 	src/commands/builtins/pwd.c \
 	src/commands/cmd_paths.c \
 	src/commands/cmd.c \

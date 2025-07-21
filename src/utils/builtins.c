@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:13:03 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 18:11:00 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/21 14:20:16 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	ft_is_builtin(char *cmd)
 		return (1);
 	if (ft_strcmp(cmd, "env") == 0)
 		return (1);
+	if (ft_strcmp(cmd, "export") == 0)
+		return (1);
 	return (0);
 }
 
@@ -43,5 +45,7 @@ int	ft_exec_builtin(char **argv, t_data *data)
 		return (ft_env(data));
 	if (ft_strcmp(argv[0], "cd") == 0)
 		return (ft_cd(argv, data));
+	if (ft_strcmp(argv[0], "export") == 0)
+		return (ft_export(argv, data));
 	return (1);
 }

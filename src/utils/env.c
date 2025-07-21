@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:52:25 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/09 15:00:06 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/21 14:52:23 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,18 @@ char	*ft_get_env(t_data *data, char *val)
 		i++;
 	}
 	return (NULL);
+}
+
+void	ft_print_env(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->envp[i])
+	{
+		ft_putendl_fd(data->envp[i], STDOUT_FILENO);
+		i++;
+	}
 }
 
 //* !ft_strncmp matches the value we want

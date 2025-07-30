@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/07/21 14:23:15 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/07/30 08:03:34 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int				ft_is_operator(char c);
 t_token_type	ft_get_operator_type(char c, char next);
 int				ft_check_pipe_end(t_data *data, char *input);
 int				ft_export(char **argv, t_data *data);
+int				ft_unset(char **argv, t_data *data);
 void			ft_print_env(t_data *data);
 
 #endif

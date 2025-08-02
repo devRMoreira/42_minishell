@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 05:53:18 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/07/30 08:16:02 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 15:11:45 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static int	find_var(t_data *data, char *key)
 	key_len = ft_strlen(key);
 	while (data->envp[i])
 	{
-		if (ft_strncmp(data->envp[i], key, key_len) == 0 &&
-			data->envp[i][key_len] == '=')
+		if (ft_strncmp(data->envp[i], key, key_len) == 0
+			&& data->envp[i][key_len] == '=')
 			return (i);
 		i++;
 	}
@@ -88,7 +88,7 @@ int	ft_unset(char **argv, t_data *data)
 {
 	int	i;
 	int	res;
-	int var_pos;
+	int	var_pos;
 
 	i = 1;
 	res = 0;
@@ -99,12 +99,10 @@ int	ft_unset(char **argv, t_data *data)
 		else
 		{
 			var_pos = find_var(data, argv[i]);
-			if(var_pos >= 0)
+			if (var_pos >= 0)
 				remove_var(data, var_pos);
 		}
-
 		i++;
 	}
 	return (res);
 }
-

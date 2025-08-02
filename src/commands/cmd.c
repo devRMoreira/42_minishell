@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/02 14:55:22 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 15:11:32 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,16 @@ static void	execute_command(char **argv, t_data *data)
 	}
 }
 
+static void	fd_reset(t_cmd *cmd, int backup_stdin, int backup_stdout)
+{
+	dup2(backup_stdin, STDIN_FILENO);
+	dup2(backup_stdout, STDOUT_FILENO);
+	if (cmd->input_fd != -1)
+		close(cmd->input_fd);
+	if (cmd->output_fd != -1)
+		close(cmd->output_fd);
+}
+
 //! no pipe yet
 void	ft_exec_cmds(t_data *data)
 {
@@ -71,12 +81,7 @@ void	ft_exec_cmds(t_data *data)
 		if (cmd->output_fd != -1)
 			dup2(cmd->output_fd, STDOUT_FILENO);
 		execute_command(cmd->argv, data);
-		dup2(backup_stdin, STDIN_FILENO);
-		dup2(backup_stdout, STDOUT_FILENO);
-		if(cmd->input_fd != -1)
-			close(cmd->input_fd);
-		if(cmd->output_fd != -1)
-			close(cmd->output_fd);
+		fd_reset(cmd, backup_stdin, backup_stdout);
 		cmd = cmd->next;
 	}
 	close(backup_stdin);

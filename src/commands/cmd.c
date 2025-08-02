@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/07/30 06:01:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:55:22 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ void	ft_exec_cmds(t_data *data)
 		execute_command(cmd->argv, data);
 		dup2(backup_stdin, STDIN_FILENO);
 		dup2(backup_stdout, STDOUT_FILENO);
+		if(cmd->input_fd != -1)
+			close(cmd->input_fd);
+		if(cmd->output_fd != -1)
+			close(cmd->output_fd);
 		cmd = cmd->next;
 	}
 	close(backup_stdin);

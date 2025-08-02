@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 16:49:37 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:53:57 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
 	else if (type == APPEND)
 		fd = open(input, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == HEREDOC)
-		return (ft_print_error(data, "heredoc no", 1), -1);
+		return (ft_handle_heredoc(input, data));
 	else
 		return (-1);
 	if (fd < 0)

@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:07:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/30 00:52:38 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:52:50 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,35 @@ char	**ft_build_argv(t_token *tokens)
 	}
 	argv[i] = NULL;
 	return (argv);
+}
+
+int ft_handle_heredoc(char *delim, t_data *data)
+{
+	int pipe_fd[2];
+	char *line;
+	char *expanded_line;
+
+	if(pipe(pipe_fd) == -1)
+		return (ft_print_error(data, "pipe failed", 1), -1);
+	while(1)
+	{
+		line = readline("> ");
+		if(!line)
+		{
+			ft_print_error(data, "warning: here-document delimited by end-of-file", 0);
+			break;
+		}
+		if(ft_strcmp(line, delim) == 0)
+		{
+			free(line);
+			break;
+		}
+		expanded_line = ft_expand(data, line);
+		write(pipe_fd[1], expanded_line, ft_strlen(expanded_line));
+		write(pipe_fd[1], "\n", 1);
+		free(line);
+		free(expanded_line);
+	}
+	close(pipe_fd[1]);
+	return (pipe_fd[0]);
 }

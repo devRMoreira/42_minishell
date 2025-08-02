@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/06/16 15:04:21 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:44:20 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,12 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 	t_data *data = ft_init_data(envp);
 	int status;
-
+	//ignore ctrl+backslash	
+	signal(SIGQUIT, SIG_IGN);
 	while(1)
 	{
+		//ctrl+c
+		signal(SIGINT, ft_handle_sigint);
 		//* get input
 		data->input = readline("minishell > ");
 
@@ -116,6 +119,7 @@ int main(int ac, char **av, char **envp)
 		}
 		else
 		{
+			ft_printf("exit\n");
 			rl_clear_history();
 			ft_free_data(data);
 			exit(data->exit_code);

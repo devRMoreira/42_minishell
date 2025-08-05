@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:58:47 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 16:54:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:17:20 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ static int	is_number(char *str)
 	return (1);
 }
 
+static void	handle_err(char *arg, t_data *data)
+{
+	char	*error_msg;
+
+	error_msg = ft_strjoin_3("exit: ", arg, ": numeric argument required");
+	ft_print_error(data, error_msg, 255);
+	free(error_msg);
+	ft_free_data(data);
+	exit(255);
+}
+
 int	ft_exit(char **argv, t_data *data)
 {
 	int	exit_code;
@@ -44,13 +55,7 @@ int	ft_exit(char **argv, t_data *data)
 		exit(exit_code);
 	}
 	if (!is_number(argv[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		ft_free_data(data);
-		exit(255);
-	}
+		handle_err(argv[1], data);
 	if (argv[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);

@@ -6,14 +6,22 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/02 15:11:32 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/05 15:59:25 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-//we check if it exited normally like from finishing its task or the exit above
-//if it was killed by a signal
-//the bash status codes for these signals are +128 of their value
+
+static void	fd_reset(t_cmd *cmd, int backup_stdin, int backup_stdout)
+{
+	dup2(backup_stdin, STDIN_FILENO);
+	dup2(backup_stdout, STDOUT_FILENO);
+	if (cmd->input_fd != -1)
+		close(cmd->input_fd);
+	if (cmd->output_fd != -1)
+		close(cmd->output_fd);
+}
+
 static void	run_cmd(char *path, char **argv, t_data *data)
 {
 	execve(path, argv, data->envp);
@@ -49,26 +57,11 @@ static void	execute_command(char **argv, t_data *data)
 	}
 }
 
-static void	fd_reset(t_cmd *cmd, int backup_stdin, int backup_stdout)
-{
-	dup2(backup_stdin, STDIN_FILENO);
-	dup2(backup_stdout, STDOUT_FILENO);
-	if (cmd->input_fd != -1)
-		close(cmd->input_fd);
-	if (cmd->output_fd != -1)
-		close(cmd->output_fd);
-}
-
-//! no pipe yet
-void	ft_exec_cmds(t_data *data)
+static void	exec_single_cmd(t_data *data, int backup_stdin, int backup_stdout)
 {
 	t_cmd	*cmd;
-	int		backup_stdin;
-	int		backup_stdout;
 
 	cmd = data->cmds;
-	backup_stdin = dup(STDIN_FILENO);
-	backup_stdout = dup(STDOUT_FILENO);
 	while (cmd)
 	{
 		if (!cmd->argv || !cmd->argv[0])
@@ -84,6 +77,21 @@ void	ft_exec_cmds(t_data *data)
 		fd_reset(cmd, backup_stdin, backup_stdout);
 		cmd = cmd->next;
 	}
+}
+
+void	ft_exec_cmds(t_data *data)
+{
+	int		backup_stdin;
+	int		backup_stdout;
+
+	if (ft_has_pipes(data->cmds))
+	{
+		ft_exec_pipes(data);
+		return ;
+	}
+	backup_stdin = dup(STDIN_FILENO);
+	backup_stdout = dup(STDOUT_FILENO);
+	exec_single_cmd(data, backup_stdin, backup_stdout);
 	close(backup_stdin);
 	close(backup_stdout);
 }

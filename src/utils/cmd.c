@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:07:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/02 15:15:51 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/05 15:53:15 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,18 @@ int	ft_handle_heredoc(char *delim, t_data *data)
 	}
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
+}
+
+int	ft_has_pipes(t_cmd *cmds)
+{
+	t_cmd	*temp;
+
+	temp = cmds;
+	while (temp)
+	{
+		if (temp->next)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
 }

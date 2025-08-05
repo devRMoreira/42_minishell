@@ -37,10 +37,11 @@ int	ft_exit(char **argv, t_data *data)
 	int	exit_code;
 
 	ft_putendl_fd("exit", STDERR_FILENO);
+	exit_code = data->exit_code;
 	if (!argv[1])
 	{
 		ft_free_data(data);
-		exit(data->exit_code);
+		exit(exit_code);
 	}
 	if (!is_number(argv[1]))
 	{

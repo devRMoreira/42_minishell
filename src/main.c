@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/02 15:42:01 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 07:32:40 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@
 
 static void	handle_exit(t_data *data)
 {
+	int exit_code;
+
+	exit_code = data->exit_code;
 	ft_printf("exit\n");
 	rl_clear_history();
 	ft_free_data(data);
-	exit(data->exit_code);
+	exit(exit_code);
 }
 
 static int	handle_input(t_data *data)
@@ -61,7 +64,7 @@ static void	handle_cmds(t_data *data)
 
 int	main(int ac, char **av, char **envp)
 {
-	int		status;
+	int		exit_code;
 	t_data	*data;
 
 	(void)ac;
@@ -80,8 +83,8 @@ int	main(int ac, char **av, char **envp)
 		else
 			handle_exit(data);
 	}
-	status = data->exit_code;
+	exit_code = data->exit_code;
 	rl_clear_history();
 	ft_free_data(data);
-	return (status);
+	return (exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 17:57:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/07/15 14:44:09 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 10:01:28 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,36 @@ static int	check_redir(t_data *data, char *input, int *i)
 		if (!skip_redir_quote(input, i, data))
 			return (0);
 	}
-	else if (!input[*i] || ft_is_operator(input[*i]))
+	else if (!input[*i])
 		return (ft_print_error(data,
 				"syntax error near unexpected token `newline'", 2), 0);
+	else if (ft_is_operator(input[*i]))
+	{
+		if (input[*i] == '>')
+		{
+			if (input[*i + 1] == '>')
+				return (ft_print_error(data,
+						"syntax error near unexpected token `>>'", 2), 0);
+			else
+				return (ft_print_error(data,
+						"syntax error near unexpected token `>'", 2), 0);
+		}
+		else if (input[*i] == '<')
+		{
+			if (input[*i + 1] == '<')
+				return (ft_print_error(data,
+						"syntax error near unexpected token `<<'", 2), 0);
+			else
+				return (ft_print_error(data,
+						"syntax error near unexpected token `<'", 2), 0);
+		}
+		else if (input[*i] == '|')
+			return (ft_print_error(data,
+					"syntax error near unexpected token `|'", 2), 0);
+		else
+			return (ft_print_error(data,
+					"syntax error near unexpected token", 2), 0);
+	}
 	return (1);
 }
 

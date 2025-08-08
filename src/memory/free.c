@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:00:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/30 02:15:14 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 07:04:06 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,9 @@ void	ft_free_data(t_data *data)
 	ft_free_split(data->envp);
 	ft_free_tokens(data->tokens);
 	ft_free_cmds(data->cmds);
+	if (data->backup_stdin != -1)
+		close(data->backup_stdin);
+	if (data->backup_stdout != -1)
+		close(data->backup_stdout);
 	free(data);
 }

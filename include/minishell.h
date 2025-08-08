@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/05 15:56:52 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 07:03:34 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct s_data
 	char	*input;
 	char	**envp;
 	int		exit_code;
+	int		backup_stdin;
+	int		backup_stdout;
 	t_token	*tokens;
 	t_cmd	*cmds;
 

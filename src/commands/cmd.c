@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/05 15:59:25 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 07:03:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,17 +81,27 @@ static void	exec_single_cmd(t_data *data, int backup_stdin, int backup_stdout)
 
 void	ft_exec_cmds(t_data *data)
 {
-	int		backup_stdin;
-	int		backup_stdout;
-
 	if (ft_has_pipes(data->cmds))
 	{
 		ft_exec_pipes(data);
 		return ;
 	}
-	backup_stdin = dup(STDIN_FILENO);
-	backup_stdout = dup(STDOUT_FILENO);
-	exec_single_cmd(data, backup_stdin, backup_stdout);
-	close(backup_stdin);
-	close(backup_stdout);
+	data->backup_stdin = dup(STDIN_FILENO);
+	data->backup_stdout = dup(STDOUT_FILENO);
+	if (data->backup_stdin == -1 || data->backup_stdout == -1)
+	{
+		if (data->backup_stdin >= 0)
+			close(data->backup_stdin);
+		if (data->backup_stdout >= 0)
+			close(data->backup_stdout);
+		data->backup_stdin = -1;
+		data->backup_stdout = -1;
+		ft_print_error(data, "dup failed", 1);
+		return ;
+	}
+	exec_single_cmd(data, data->backup_stdin, data->backup_stdout);
+	close(data->backup_stdin);
+	close(data->backup_stdout);
+	data->backup_stdin = -1;
+	data->backup_stdout = -1;
 }

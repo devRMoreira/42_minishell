@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:37:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/05/20 17:35:48 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 07:04:04 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ t_data	*ft_init_data(char **envp)
 		}
 	}
 	data->exit_code = 0;
+	data->backup_stdin = -1;
+	data->backup_stdout = -1;
 	data->tokens = NULL;
 	data->cmds = NULL;
 	return (data);

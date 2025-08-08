@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:08:04 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/07/15 14:30:09 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 09:36:18 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,43 @@ static char	*handle_dollar_or_text(t_data *data, char *str, int *i, char *res)
 	char	*temp;
 	char	*segment;
 	char	*expand;
+	int		j;
 
 	if (str[*i] == '$')
 	{
+		j = *i - 1;
+		while (j >= 0 && (str[j] == ' ' || str[j] == '\t'))
+			j--;
+		if (j >= 1 && str[j - 1] == '<' && str[j] == '<')
+		{
+			start = *i;
+			while (str[*i] && str[*i] != ' ' && str[*i] != '\t'
+				&& str[*i] != '\n' && str[*i] != '\'' && str[*i] != '"')
+				(*i)++;
+			temp = ft_substr(str, start, *i - start);
+			if (!temp)
+				return (free(res), NULL);
+			segment = ft_strjoin(res, temp);
+			free(temp);
+			free(res);
+			return (segment);
+		}
+		if (str[*i + 1] == '\'')
+		{
+			(*i) += 2;
+			start = *i;
+			while (str[*i] && str[*i] != '\'')
+				(*i)++;
+			temp = ft_substr(str, start, *i - start);
+			if (!temp)
+				return (free(res), NULL);
+			segment = ft_strjoin(res, temp);
+			free(temp);
+			free(res);
+			if (str[*i] == '\'')
+				(*i)++;
+			return (segment);
+		}
 		expand = ft_expand_var(data, str, i);
 		segment = ft_strjoin(res, expand);
 		free(res);

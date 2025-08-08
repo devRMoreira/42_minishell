@@ -1,0 +1,241 @@
+# Readline and ncurses memory leak suppressions for minishell
+# These are known library leaks that are not our responsibility
+
+{
+   readline_malloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   readline_xmalloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   readline_calloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   readline_realloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   ncurses_malloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   obj:*/libtinfo.so*
+}
+
+{
+   ncurses_calloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   ...
+   obj:*/libtinfo.so*
+}
+
+{
+   ncurses_realloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   ...
+   obj:*/libtinfo.so*
+}
+
+{
+   ncurses_strdup_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   ...
+   obj:*/libtinfo.so*
+}
+
+{
+   readline_history_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   ...
+   fun:add_history
+}
+
+{
+   readline_keymap_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_make_bare_keymap
+}
+
+{
+   readline_funmap_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_add_funmap_entry
+}
+
+{
+   readline_terminal_init_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:_rl_init_terminal_io
+}
+
+{
+   readline_initialize_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:rl_initialize
+}
+
+{
+   tsearch_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:tsearch
+}
+
+# External command suppressions (grep, cat, etc.)
+# These are system binary leaks that are not our responsibility
+
+{
+   grep_malloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:malloc
+   ...
+   obj:/usr/bin/grep
+}
+
+{
+   grep_realloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:realloc
+   ...
+   obj:/usr/bin/grep
+}
+
+{
+   grep_calloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:calloc
+   ...
+   obj:/usr/bin/grep
+}
+
+{
+   cat_malloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:malloc
+   ...
+   obj:/usr/bin/cat
+}
+
+{
+   cat_realloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:realloc
+   ...
+   obj:/usr/bin/cat
+}
+
+{
+   cat_calloc_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:calloc
+   ...
+   obj:/usr/bin/cat
+}
+
+{
+   external_command_malloc
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:malloc
+   ...
+   obj:/usr/bin/*
+}
+
+{
+   external_command_realloc
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:realloc
+   ...
+   obj:/usr/bin/*
+}
+
+{
+   external_command_calloc
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:calloc
+   ...
+   obj:/usr/bin/*
+}
+
+{
+   external_command_malloc_bin
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:malloc
+   ...
+   obj:/bin/*
+}
+
+{
+   external_command_realloc_bin
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:realloc
+   ...
+   obj:/bin/*
+}
+
+{
+   external_command_calloc_bin
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:calloc
+   ...
+   obj:/bin/*
+}

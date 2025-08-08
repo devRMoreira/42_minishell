@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:34 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 07:32:40 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/08 09:22:24 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static void	handle_exit(t_data *data)
 {
-	int exit_code;
+	int	exit_code;
 
 	exit_code = data->exit_code;
 	ft_printf("exit\n");

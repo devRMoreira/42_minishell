@@ -6,7 +6,7 @@
 #    By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 11:36:50 by rimagalh          #+#    #+#              #
-#    Updated: 2025/08/05 15:08:01 by rimagalh         ###   ########.fr        #
+#    Updated: 2025/08/08 09:22:22 by rimagalh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC = src/main.c \
 	src/commands/cmd_paths.c \
 	src/commands/cmd.c \
 	src/commands/pipe.c \
+	src/commands/heredoc.c \
 	src/expansion/expansion.c \
 	src/memory/cmd.c \
 	src/memory/data.c \
@@ -42,6 +43,7 @@ SRC = src/main.c \
 	src/utils/error.c \
 	src/utils/expansion.c \
 	src/utils/parsing.c \
+	src/utils/pipe.c \
 	src/utils/signal.c \
 	src/utils/syntax.c \
 

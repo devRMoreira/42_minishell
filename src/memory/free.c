@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:00:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 07:04:06 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:47:34 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,12 @@ void	ft_free_tokens(t_token *tokens)
 void	ft_free_cmds(t_cmd *cmds)
 {
 	t_cmd	*temp;
-	int		i;
 
 	while (cmds)
 	{
 		temp = cmds->next;
-		i = -1;
 		if (cmds->argv)
-		{
-			while (cmds->argv[++i])
-				free(cmds->argv[i]);
-			free(cmds->argv);
-		}
+			ft_free_split(cmds->argv);
 		if (cmds->input_fd != -1 && cmds->input_fd != STDIN_FILENO)
 			close(cmds->input_fd);
 		if (cmds->output_fd != -1 && cmds->output_fd != STDOUT_FILENO)
@@ -48,6 +42,7 @@ void	ft_free_cmds(t_cmd *cmds)
 			close(cmds->pipe[0]);
 		if (cmds->pipe[1] != -1)
 			close(cmds->pipe[1]);
+		ft_free_redirs(cmds->redirects);
 		free(cmds->path);
 		free(cmds);
 		cmds = temp;

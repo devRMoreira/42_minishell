@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:37:57 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 07:04:04 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:51:25 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,8 @@ static char	**get_envp(char **envp)
 		new[i] = ft_strdup(envp[i]);
 		if (!new[i])
 		{
-			while (--i >= 0)
-				free(new[i]);
-			free(new);
+			new[i] = NULL;
+			ft_free_split(new);
 			return (NULL);
 		}
 	}

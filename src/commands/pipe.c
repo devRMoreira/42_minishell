@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:57:51 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 09:22:22 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:45:43 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static void	setup_pipes(t_cmd *cmds, t_data *data)
 static void	exec_pipe_cmd(t_cmd *cmd, t_data *data, t_cmd *prev_cmd)
 {
 	pid_t	pid;
+	char buffer[4096];
 
 	pid = fork();
 	if (pid == 0)
@@ -64,7 +65,21 @@ static void	exec_pipe_cmd(t_cmd *cmd, t_data *data, t_cmd *prev_cmd)
 			dup2(cmd->input_fd, STDIN_FILENO);
 		if (cmd->output_fd != -1)
 			dup2(cmd->output_fd, STDOUT_FILENO);
+		if (!ft_setup_redirections(cmd, data))
+		{
+			ft_close_pipes(data->cmds);
+			exit(1);
+		}
 		ft_close_pipes(data->cmds);
+		// If command is empty, consume input to prevent SIGPIPE to previous command
+		// otherwise exit codes will be all wrong because it gives the exit code for the
+		// first command erroring since the pipe didn't work
+		if (!cmd->argv || !cmd->argv[0] || cmd->argv[0][0] == '\0')
+		{
+			while (read(STDIN_FILENO, buffer, sizeof(buffer)) > 0)
+				;
+			exit(0);
+		}
 		do_cmd(cmd, data);
 	}
 }

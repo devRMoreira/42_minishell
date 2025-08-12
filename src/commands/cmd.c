@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:05:23 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 07:03:39 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:43:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,18 @@ static void	exec_single_cmd(t_data *data, int backup_stdin, int backup_stdout)
 			cmd = cmd->next;
 			continue ;
 		}
+		// Keep backward compatibility for existing fd redirections
 		if (cmd->input_fd != -1)
 			dup2(cmd->input_fd, STDIN_FILENO);
 		if (cmd->output_fd != -1)
 			dup2(cmd->output_fd, STDOUT_FILENO);
+		// Setup new redirection system
+		if (!ft_setup_redirections(cmd, data))
+		{
+			fd_reset(cmd, backup_stdin, backup_stdout);
+			cmd = cmd->next;
+			continue ;
+		}
 		execute_command(cmd->argv, data);
 		fd_reset(cmd, backup_stdin, backup_stdout);
 		cmd = cmd->next;

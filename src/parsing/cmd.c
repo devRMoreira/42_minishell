@@ -6,99 +6,38 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 02:50:58 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 09:22:24 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:49:37 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	handle_fd_redir(t_token_type type, char *input, t_data *data)
-{
-	int		fd;
-	char	*error;
-
-	if (type == REDIRIN)
-		fd = open(input, O_RDONLY);
-	else if (type == REDIROUT)
-		fd = open(input, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (type == APPEND)
-		fd = open(input, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else if (type == HEREDOC)
-		return (ft_handle_heredoc(input, data));
-	else
-		return (-1);
-	if (fd < 0)
-	{
-		error = ft_strjoin_3(input, ": ", strerror(errno));
-		if (error)
-		{
-			ft_print_error(data, error, 1);
-			free(error);
-		}
-		else
-			return (ft_print_error(data, input, 1), -1);
-	}
-	return (fd);
-}
-
-static void	assign_fd(t_cmd *cmd, t_token_type type, int fd)
-{
-	if (type == REDIRIN || type == HEREDOC)
-	{
-		if (cmd->input_fd != -1)
-			close(cmd->input_fd);
-		cmd->input_fd = fd;
-	}
-	else
-	{
-		if (cmd->output_fd != -1)
-			close(cmd->output_fd);
-		cmd->output_fd = fd;
-	}
-}
-
 static int	parse_redirects(t_data *data, t_cmd *cmd, t_token **temp)
 {
-	int		fd;
 	char	*file;
+	t_redir	*new_redir;
 
 	if (*temp && (*temp)->type == PIPE
 		&& (*temp)->next && (*temp)->next->type == PIPE)
 		return (ft_syntax_error(data, (*temp)->next),
 			ft_clean_cmds(data), 0);
-	while (*temp && (*temp)->type != PIPE)
+	while (*temp && ((*temp)->type == REDIRIN || (*temp)->type == REDIROUT
+		|| (*temp)->type == HEREDOC || (*temp)->type == APPEND))
 	{
 		if (!(*temp)->next || (*temp)->next->type != WORD)
 			return (ft_syntax_error(data, (*temp)->next),
 				ft_clean_cmds(data), 0);
 		file = (*temp)->next->input;
-		fd = handle_fd_redir((*temp)->type, file, data);
-		if (fd < 0)
+		if (!file || !*file)
+			return (ft_print_error(data, "ambiguous redirect", 1),
+				ft_clean_cmds(data), 0);
+		new_redir = ft_new_redir((*temp)->type, file);
+		if (!new_redir)
 			return (ft_clean_cmds(data), 0);
-		assign_fd(cmd, (*temp)->type, fd);
+		ft_add_redir_to_cmd(cmd, new_redir);
 		*temp = (*temp)->next->next;
 	}
 	return (1);
-}
-
-static t_cmd	*setup_cmd(t_data *data, t_cmd **last, t_token **temp)
-{
-	t_cmd	*cmd;
-
-	cmd = ft_new_cmd();
-	if (!cmd)
-		return (ft_clean_cmds(data), NULL);
-	if (!data->cmds)
-		data->cmds = cmd;
-	else
-		(*last)->next = cmd;
-	*last = cmd;
-	cmd->argv = ft_build_argv(*temp);
-	if (!cmd->argv)
-		return (ft_clean_cmds(data), NULL);
-	while (*temp && (*temp)->type == WORD)
-		*temp = (*temp)->next;
-	return (cmd);
 }
 
 int	ft_parse_cmds(t_data *data)
@@ -114,13 +53,48 @@ int	ft_parse_cmds(t_data *data)
 		return (ft_syntax_error(data, temp), 0);
 	while (temp)
 	{
-		new = setup_cmd(data, &last, &temp);
+		new = ft_new_cmd();
 		if (!new)
+			return (ft_clean_cmds(data), 0);
+		if (!data->cmds)
+			data->cmds = new;
+		else
+			last->next = new;
+		last = new;
+		if (!parse_redirects(data, new, &temp))
 			return (0);
+		new->argv = ft_build_argv(temp);
+		if (!new->argv)
+			return (ft_clean_cmds(data), 0);
+		while (temp && temp->type == WORD)
+			temp = temp->next;
 		if (!parse_redirects(data, new, &temp))
 			return (0);
 		if (temp && temp->type == PIPE)
+		{
 			temp = temp->next;
+			// due to the way expansion and parsing was done
+			// on commands like ls | $random_var, when a var after a pipe expands to nothing
+			// it still needs an empty command afterwards to preserve pipe structure
+			// and not output on the terminal
+			// doing it in a better way would mean remaking the flow of expansion/parsing
+			if (!temp)
+			{
+				new = ft_new_cmd();
+				if (!new)
+					return (ft_clean_cmds(data), 0);
+				if (!data->cmds)
+					data->cmds = new;
+				else
+					last->next = new;
+				last = new;
+
+				new->argv = malloc(sizeof(char *) * 1);
+				if (!new->argv)
+					return (ft_clean_cmds(data), 0);
+				new->argv[0] = NULL;
+			}
+		}
 	}
 	return (1);
 }

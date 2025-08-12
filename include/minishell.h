@@ -6,7 +6,7 @@
 /*   By: rimagalh <rimagalh@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:38:10 by rimagalh          #+#    #+#             */
-/*   Updated: 2025/08/08 09:22:41 by rimagalh         ###   ########.fr       */
+/*   Updated: 2025/08/12 19:43:39 by rimagalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_redir
+{
+	t_token_type	type;
+	char			*filename;
+	struct s_redir	*next;
+}	t_redir;
+
 typedef struct s_cmd
 {
 	char			**argv;
@@ -49,6 +56,7 @@ typedef struct s_cmd
 	int				pipe[2];
 	int				input_fd;
 	int				output_fd;
+	t_redir			*redirects;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -100,6 +108,10 @@ void			ft_free_data(t_data *data);
 void			ft_free_cmds(t_cmd *cmds);
 void			ft_free_split(char **paths);
 t_cmd			*ft_new_cmd(void);
+t_redir			*ft_new_redir(t_token_type type, char *filename);
+void			ft_add_redir_to_cmd(t_cmd *cmd, t_redir *redir);
+void			ft_free_redirs(t_redir *redirs);
+int				ft_setup_redirections(t_cmd *cmd, t_data *data);
 char			*ft_create_word(char *str1, char *str2);
 int				ft_is_empty(char *s);
 int				ft_is_space(char c);
